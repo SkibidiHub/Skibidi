@@ -3,8 +3,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <title>Cloud Phone UI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Cloud Phone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
@@ -32,6 +32,7 @@
       width: 100%;
       height: 100%;
       z-index: -1;
+      opacity: 0.8;
     }
     .gradient-overlay {
       position: fixed;
@@ -41,7 +42,7 @@
       height: 100%;
       background: radial-gradient(circle at center, rgba(255, 107, 107, 0.2), rgba(155, 89, 182, 0.2), transparent);
       z-index: -1;
-      opacity: 0.5;
+      opacity: 0.3;
     }
     .grid-overlay {
       position: fixed;
@@ -52,7 +53,7 @@
       background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
                   linear-gradient(0deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       background-size: 50px 50px;
-      opacity: 0.3;
+      opacity: 0.2;
       z-index: -1;
       animation: gridPulse 10s infinite ease-in-out;
     }
@@ -100,8 +101,7 @@
       border: 1px solid rgba(255, 185, 153, 0.2);
       text-align: center;
       position: relative;
-      background: url(https://i.imgur.com/7nxIFt9.jpeg) no-repeat center center;
-      background-size: cover;
+      background: transparent;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 107, 107, 0.3);
       transition: transform 0.4s ease, box-shadow 0.4s ease;
       will-change: transform, box-shadow;
@@ -164,6 +164,11 @@
       height: 100%;
       object-fit: cover;
     }
+    .button-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
     .button {
       background: linear-gradient(45deg, #ff6b6b, #9b59b6);
       color: #fff;
@@ -177,7 +182,6 @@
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 107, 107, 0.4);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      margin-top: 20px;
     }
     .button:hover {
       transform: scale(1.1);
@@ -199,6 +203,40 @@
       width: 200px;
       height: 200px;
     }
+    .copy-button {
+      background: linear-gradient(45deg, #6b7280, #4b5563);
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(107, 114, 128, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .copy-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(107, 114, 128, 0.6), 0 0 25px rgba(75, 85, 99, 0.5);
+    }
+    .copy-button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+    .copy-button:active::before {
+      width: 150px;
+      height: 150px;
+    }
     .container::-webkit-scrollbar {
       display: none;
     }
@@ -207,11 +245,11 @@
       top: 0;
       left: 0;
       width: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(8px);
-      padding: 12px 0;
+      background: rgba(0, 0, 0, 1);
+      padding: 14px 0;
       z-index: 1000;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 107, 107, 0.3);
+      border-bottom: 2px solid #ff6b6b;
     }
     nav ul {
       display: flex;
@@ -230,23 +268,19 @@
       margin: 0 8px;
     }
     nav a {
-      color: #fff;
+      color: #ffffff;
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-      padding: 8px 10px;
+      font-size: 20px;
+      font-weight: 900;
+      padding: 10px 14px;
       border-radius: 10px;
-      transition: all 0.3s ease;
       position: relative;
       display: inline-block;
       cursor: pointer;
-      text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+      background: rgba(255, 255, 255, 0.1);
     }
     nav a:hover, nav a.active {
-      background: linear-gradient(45deg, #ff6b6b, #9b59b6);
-      box-shadow: 0 0 12px rgba(255, 107, 107, 0.6);
-      transform: scale(1.05);
-      text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.1);
     }
     nav a::after {
       content: '';
@@ -255,7 +289,7 @@
       left: 50%;
       width: 0;
       height: 2px;
-      background: #fff;
+      background: #ffffff;
       transition: width 0.3s ease, left 0.3s ease;
       transform: translateX(-50%);
     }
@@ -278,9 +312,9 @@
       100% { transform: scale(1); }
     }
     @keyframes gridPulse {
-      0% { opacity: 0.3; }
-      50% { opacity: 0.5; }
-      100% { opacity: 0.3; }
+      0% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+      100% { opacity: 0.2; }
     }
     @media (max-width: 400px) {
       .container {
@@ -293,6 +327,7 @@
         width: min(220px, 85%);
         height: 460px;
         padding: 15px;
+        background: transparent;
       }
       .header {
         font-size: 13px;
@@ -306,6 +341,13 @@
       .button {
         font-size: 13px;
         padding: 8px 15px;
+      }
+      .copy-button {
+        font-size: 13px;
+        padding: 8px 10px;
+      }
+      .button-container {
+        gap: 8px;
         margin-top: 15px;
       }
       nav {
@@ -318,19 +360,20 @@
         margin: 0 6px;
       }
       nav a {
-        font-size: 13px;
-        padding: 6px 8px;
-        text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        font-size: 18px;
+        font-weight: 900;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.1);
       }
       nav a:hover, nav a.active {
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+        background: rgba(255, 255, 255, 0.1);
       }
       .gradient-overlay {
-        opacity: 0.3;
+        opacity: 0.2;
       }
       .grid-overlay {
         background-size: 30px 30px;
-        opacity: 0.2;
+        opacity: 0.15;
       }
     }
   </style>
@@ -384,7 +427,7 @@
       <li><a href="#device-41">Thiết Bị EA SPORTS FC™</a></li>
       <li><a href="#device-42">Thiết Bị EA Mobile Legends™</a></li>
       <li><a href="#device-43">Thiết Bị League of Legends™</a></li>
-      <li><a href="#device-44">Thiết Bị skibidi</a></li>
+      <li><a href="#device-44">Thiết Bị Chồng Của Meo Lazy</a></li>
       <li><a href="#device-45">Thiết Bị Thử Nghiệm</a></li>
     </ul>
   </nav>
@@ -393,315 +436,406 @@
       <div class="header">Thiết Bị App Launcher</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/apps-content/com.uncube.launcher3/icon/now.png" alt="App Launcher" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://now.gg/apps/uncube/7074_t1/now.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://now.gg/apps/uncube/7074_t1/now.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-2">
       <div class="header">Thiết Bị Roblox</div>
       <div class="content">
         <div class="image"><img src="https://cdn6.aptoide.com/imgs/0/c/2/0c215277a5b9286286656f65318057f8_icon.png?w=128" alt="Roblox" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eTFUVFAxVHBxUCxcaAlQJFBkXFANWGBQJCxQJGg8SFBVUT0tLSktUCRQZFxQD","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eTFUVFAxVHBxUCxcaAlQJFBkXFANWGBQJCxQJGg8SFBVUT0tLSktUCRQZFxQD","_blank")'>Vào Chơi</div>
+          <div class="copy-button" onclick="copyLink()">Sao Chép</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-3">
       <div class="header">Thiết Bị Roblox VN</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/84011b87d8d54e4482a6cd25cdb0ba441728551369.jpg?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Roblox VN" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/roblox-vng-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/roblox-vng-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-4">
       <div class="header">Thiết Bị Shadow 3</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/apps-content/8861/icon/shadow-fight-3.png" alt="Shadow Fight 3" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-4.now.gg/apps/nekki/8861/shadow-fight-3.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-4.now.gg/apps/nekki/8861/shadow-fight-3.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-5">
       <div class="header">Thiết Bị Popyy Meow</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/apps-content/com.MOBGames.PoppyMobileChap1/icon/poppy-playtime.png" alt="Poppy Playtime" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUGgsLCFQWFBlWHBoWHghWCA8OHxIUVEpJQkhUCxQLCwJWCxcaAg8SFh5VEw8WFw==","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUGgsLCFQWFBlWHBoWHghWCA8OHxIUVEpJQkhUCxQLCwJWCxcaAg8SFh5VEw8WFw==","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-6">
       <div class="header">Thiết Bị Half Anniv</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/now-gg-store/531/jp.boi.mementomori.android.dev/6465e7e9db2f0a9195258bf0/assets/en/game-icon.png" alt="Memento Mori" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUCxcaAlQZGhUQVhQdVhIVFRQNGg8SFBVUSUtKQ1QWHhYeFQ8UVhYUCRI=","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUCxcaAlQZGhUQVhQdVhIVFRQNGg8SFBVUSUtKQ1QWHhYeFQ8UVhYUCRI","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-7">
       <div class="header">Thiết Bị N/A 2</div>
       <div class="content">
         <div class="image"><img src="https://i.imgur.com/ry2wuZy.jpeg" alt="N/A 2" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUGgsLCFQIEAINDlRMQ0pPJA9KVBkaDw8XHlYZHhoJCFYRFAIJEh8eVRMPFhc=","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUGgsLCFQIEAINDlRMQ0pPJA9KVBkaDw8XHlYZHhoJCFYRFAIJEh8eVRMPFhc=","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-8">
       <div class="header">Thiết Bị N/A</div>
       <div class="content">
         <div class="image"><img src="https://i.imgur.com/ry2wuZy.jpeg" alt="N/A" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://testdrive7.now.gg/apps/plug-in-digital/9437_t1/human-heroes-curie-on-matter-ml.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://testdrive7.now.gg/apps/plug-in-digital/9437_t1/human-heroes-curie-on-matter-ml.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-9">
       <div class="header">Thiết Bị Goku Siêu Cấp</div>
       <div class="content">
         <div class="image"><img src="https://i.imgur.com/YaausjQ.jpeg" alt="Dragon Ball Legends" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://staging-demo.abctest.in/apps/bandai-namco-entertainment-inc-/1393/dragon-ball-legends.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://staging-demo.abctest.in/apps/bandai-namco-entertainment-inc-/1393/dragon-ball-legends.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-10">
       <div class="header">Thiết Bị Gura Impact</div>
       <div class="content">
         <div class="image"><img src="https://i.imgur.com/8k57EXc.jpeg" alt="Gura Impact" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://now.gg/apps/a/","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://now.gg/apps/a/","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-11">
       <div class="header">Thiết Bị Miku Impact</div>
       <div class="content">
         <div class="image"><img src="https://i.imgur.com/q1wzUwl.jpeg" alt="Assault Lily" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://now.gg/apps/pokelabo-inc/5139/assault-lily-last-bullet.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://now.gg/apps/pokelabo-inc/5139/assault-lily-last-bullet.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-12">
       <div class="header">Thiết Bị Human Heros</div>
       <div class="content">
         <div class="image"><img src="https://images.sftcdn.net/images/t_app-icon-m/p/c02e9279-28df-462a-b7dc-4ab1f0c77036/2583136360/human-heroes-curie-on-matter-logo" alt="Human Heroes" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://testdrive7.now.gg/apps/plug-in-digital/9437_t1/human-heroes-curie-on-matter-ml.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://testdrive7.now.gg/apps/plug-in-digital/9437_t1/human-heroes-curie-on-matter-ml.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-13">
       <div class="header">Thiết Bị Genshin Impact</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252Fcom.miHoYo.GenshinImpact%252Ficon%252Fgenshin-impact.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Genshin Impact" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDw4JGRQXEg8eVQMCAVQTGhgQSQ==","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUExBWEx4JFFYeFQ8eCQ8aEhUWHhUPVhgUVhcSFhIPHh9USk1NT1QeDx4JFRoXVh4NFBcODxIUFVUTDxYX","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-14">
       <div class="header">Thiết Bị Free Fire Sibikidi</div>
       <div class="content">
         <div class="image"><img src="https://i.imgur.com/i4YEa3X.jpeg" alt="Free Fire" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://stagingngg.net/apps/garena-international-i/1398/free-fire.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://stagingngg.net/apps/garena-international-i/1398/free-fire.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-15">
       <div class="header">Thiết Bị Honkai Star</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/apps-content/com.HoYoverse.hkrpgoversea/icon/honkai-star-rail.png" alt="Honkai Star Rail" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://stagingngg.net/apps/cognosphere-pte-ltd/1591/honkai-star-rail.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://stagingngg.net/apps/cognosphere-pte-ltd/1591/honkai-star-rail.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-16">
       <div class="header">Thiết Bị Terrarum</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F9059%252Ficon%252Ftales-of-terrarum.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Tales of Terrarum" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/electronic-soul/9059/tales-of-terrarum.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/electronic-soul/9059/tales-of-terrarum.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-17">
       <div class="header">Thiết Bị Zombie Island</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F8888%252Ficon%252Fzombieland-doomsday-survival.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Zombieland" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/juefeng-games/8888/zombieland-doomsday-survival.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/juefeng-games/8888/zombieland-doomsday-survival.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-18">
       <div class="header">Thiết Bị Chaser</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/apps-content/10417/icon/chasers.png" alt="Chasers" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUFxIdDhcIHlRKS09KTFQYExoIHgkIVRMPFhc=","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUFxIdDhcIHlRKS09KTFQYExoIHgkIVRMPFhc=","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-19">
       <div class="header">Thiết Bị Scarlett Girl</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/apps-content/9887/icon/scarlet-girls.png" alt="Scarlet Girls" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUGQ4JCA8cGhYeVEJDQ0xUCBgaCRceD1YcEgkXCFUTDxYX","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUGQ4JCA8cGhYeVEJDQ0xUCBgaCRceD1YcEgkXCFUTDxYX","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-20">
       <div class="header">Thiết Bị Walking Dead</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F10512%252Ficon%252Fthe-walking-dead-survivors.png%26w%3D256%26q%3D80&w=1440&q=70" alt="The Walking Dead" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/galaxy-play-technology-limited/10512/the-walking-dead-survivors.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/galaxy-play-technology-limited/10512/the-walking-dead-survivors.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-21">
       <div class="header">Thiết Bị Battle Bears</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F8270%252Ficon%252Fbattle-bears-heroes.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Battle Bears" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/battlecoin-games/8270/battle-bears-heroes.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/battlecoin-games/8270/battle-bears-heroes.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-22">
       <div class="header">Thiết Bị Kepler 2100</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/apps-content/9191/icon/kepler-2100.png" alt="Kepler 2100" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/zeyou-game/9191/kepler-2100.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/zeyou-game/9191/kepler-2100.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-23">
       <div class="header">Thiết Bị Magic Forest</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/apps-content/9030/icon/magic-forest-dragon-quest.png" alt="Magic Forest" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/sugar-game-network-limited/9030/magic-forest-dragon-quest.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/sugar-game-network-limited/9030/magic-forest-dragon-quest.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-24">
       <div class="header">Thiết Bị Ancient Seal</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F10382%252Ficon%252Fancient-seal-the-exorcist.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Ancient Seal" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/lovo-entertainment-hong-kong-limited/10382/ancient-seal-the-exorcist.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/lovo-entertainment-hong-kong-limited/10382/ancient-seal-the-exorcist.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-25">
       <div class="header">Thiết Bị Nexus</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F8706%252Ficon%252Fnexus-nebula-echoes.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Nexus" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/magic-game/8706/nexus-nebula-echoes.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/magic-game/8706/nexus-nebula-echoes.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-26">
       <div class="header">Thiết Bị Eternal Evolution</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252Fcom.herogame.gplay.eternalevolution.idlerpg%252Ficon%252Feternal-evolution.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Eternal Evolution" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUExBWEx4JFFYeFQ8eCQ8aEhUWHhUPVhgUVhcSFhIPHh9USk1NT1QeDx4JFRoXVh4NFBcODxIUFVUTDxYX","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUExBWEx4JFFYeFQ8eCQ8aEhUWHhUPVhgUVhcSFhIPHh9USk1NT1QeDx4JFRoXVh4NFBcODxIUFVUTDxYX","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-27">
       <div class="header">Thiết Bị Blue Archive</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/482c8941475e40e399f365194ff87a5c1728455828.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Blue Archive" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/blue-archive.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/blue-archive.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-28">
       <div class="header">Thiết Bị Genshin Inpact</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/4dfe62cd7c3f4b2dafe7642693b652de1728456516.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Genshin Impact" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/genshin-impact.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/genshin-impact.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-29">
       <div class="header">Thiết Bị Wuthering Waves</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/455f8238e9b44cb3b4b6055a3a0a051d1728452029.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Wuthering Waves" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/wuthering-waves.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/wuthering-waves.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-30">
       <div class="header">Thiết Bị Jujutsu Kaisen</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/a3505ca781474a839ae5c14e81a56aa61730962649.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Jujutsu Kaisen" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/jujutsu-kaisen-phantom-parade-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/jujutsu-kaisen-phantom-parade-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-31">
       <div class="header">Thiết Bị Ash Echoes</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/19a2c6f333744c299749ea1b29ffe8531731472925.webp?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Ash Echoes" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/ash-echoes-global-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/ash-echoes-global-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-32">
       <div class="header">Thiết Bị Arise</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/0f8a8f037249466bb9d6bb9c73d0ed2a1739515022.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Solo Leveling Arise" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/solo-leveling-arise-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/solo-leveling-arise-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-33">
       <div class="header">Thiết Bị Punishing</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/62e7403ee3ad4aefa652668b2de17d8a1728535412.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Punishing Gray Raven" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/punishing-gray-raven-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/punishing-gray-raven-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-34">
       <div class="header">Thiết Bị Ác Quỷ Free Fire</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/b8e2aca38996414ab40a6960bcb9463b1728458849.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Free Fire" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/free-fire.html?start=1","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/free-fire.html?start=1","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-35">
       <div class="header">Thiết Bị Free Fire Max</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/a2c257385776441d86efc902cf0df7bc1739100963.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Free Fire Max" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/free-fire-max-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/free-fire-max-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-36">
       <div class="header">Thiết Bị Honkai Impact 3rd</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/3c7d5324c87145dd9387db23097dce661732273401.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Honkai Impact 3rd" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/honkai-impact-3rd-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/honkai-impact-3rd-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-37">
       <div class="header">Thiết Bị Honor of Kings</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/20c81b798f934791afc33209cdc1be431728552472.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Honor of Kings" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/honor-of-kings-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/honor-of-kings-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-38">
       <div class="header">Thiết Bị PUBG Mobile</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/8da70c84c2ab4197ab447488fe6ef73f1728469957.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="PUBG Mobile" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/pubg-mobile-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/pubg-mobile-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-39">
       <div class="header">Thiết Bị Aether Gazer</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/6d411ea6a5404859b826c22faec8a3331728465612.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Aether Gazer" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/aether-gazer-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/aether-gazer-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-40">
       <div class="header">Thiết Bị ブルーアーカイブ</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/1eb1698f7e104bc78d0b9b9114beb5051728456010.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Blue Archive JP" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/com-yostar-jp-blue-archive.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/com-yostar-jp-blue-archive.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-41">
       <div class="header">Thiết Bị EA SPORTS FC™</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/f84c40056d7c472aa74619de83b3f1e21728460793.jpg?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="EA SPORTS FC" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/ea-sports-fc-uefa-euro-2024.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/ea-sports-fc-uefa-euro-2024.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-42">
       <div class="header">Thiết Bị EA Mobile Legends™</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/5ce5c3d7c3134644a0da7bfe95d02d951728468957.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Mobile Legends" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/mobile-legends-bang-bang-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/mobile-legends-bang-bang-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-43">
       <div class="header">Thiết Bị League of Legends™</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/cb91f0b4f99c440db9005e5adcf6493f1731678885.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="League of Legends" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/league-of-legends-wild-rift-cloud-online.html","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/league-of-legends-wild-rift-cloud-online.html","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-44">
-      <div class="header">Thiết Bị skibidi</div>
+      <div class="header">Thiết Bị Chồng Của Meo Lazy</div>
       <div class="content">
         <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/d5f9b8e0bb284130859aeef06618eab11735489302.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Tears of Themis" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/tears-of-themis-cloud-online.html?start=1","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/tears-of-themis-cloud-online.html?start=1","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
     <div class="screen" id="device-45">
       <div class="header">Thiết Bị Thử Nghiệm</div>
       <div class="content">
         <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252Fdefault%252Fimages%252FIcon_512.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Test App" loading="lazy"></div>
-        <div class="button" onclick='window.open("https://cloud.vmoscloud.com/screen/share/52F5-71E4-839C-4165-9183-2D1A-C37B-45F7","_blank")'>Vào Chơi</div>
+        <div class="button-container">
+          <div class="button" onclick='window.open("https://cloud.vmoscloud.com/screen/share/52F5-71E4-839C-4165-9183-2D1A-C37B-45F7","_blank")'>Vào Chơi</div>
+        </div>
       </div>
     </div>
   </div>
@@ -805,6 +939,16 @@
         screen.style.backgroundPosition = `${50 + offset * 25}% center`;
       });
     });
+    // Copy link function
+    function copyLink() {
+      const link = "https://now.gg/apps/Blox-fruit/19901/Blox-fruit.html";
+      navigator.clipboard.writeText(link).then(() => {
+        alert("Đã sao chép liên kết: " + link);
+      }).catch(err => {
+        console.error("Lỗi khi sao chép liên kết: ", err);
+        alert("Không thể sao chép liên kết. Vui lòng thử lại.");
+      });
+    }
   </script>
 </body>
 </html>
