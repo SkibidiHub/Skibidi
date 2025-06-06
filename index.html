@@ -1,954 +1,1501 @@
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ffffff">
-  <title>Cloud Phone</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Poppins, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body {
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-    }
-    #particles-js {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.8;
-    }
-    .gradient-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at center, rgba(255, 107, 107, 0.2), rgba(155, 89, 182, 0.2), transparent);
-      z-index: -1;
-      opacity: 0.3;
-    }
-    .grid-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                  linear-gradient(0deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      background-size: 50px 50px;
-      opacity: 0.2;
-      z-index: -1;
-      animation: gridPulse 10s infinite ease-in-out;
-    }
-    .container {
-      width: min(400px, 95%);
-      max-width: 100%;
-      height: 520px;
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 20px;
-      padding: 15px;
-      margin: 0 auto;
-      scroll-behavior: smooth;
-      position: relative;
-      z-index: 1;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
-      border-radius: 25px;
-      box-shadow: 0 0 30px rgba(255, 107, 107, 0.4), 0 0 50px rgba(155, 89, 182, 0.3);
-      border: 2px solid transparent;
-      border-image: linear-gradient(45deg, #ff6b6b, #9b59b6) 1;
-    }
-    .container::before {
-      content: '';
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
-      border-radius: 30px;
-      background: linear-gradient(45deg, rgba(255, 107, 107, 0.2), rgba(155, 89, 182, 0.2));
-      z-index: -1;
-      filter: blur(20px);
-    }
-    .screen {
-      width: min(260px, 90%);
-      height: 500px;
-      flex: none;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      scroll-snap-align: center;
-      padding: 20px;
-      border: 1px solid rgba(255, 185, 153, 0.2);
-      text-align: center;
-      position: relative;
-      background: transparent;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 107, 107, 0.3);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      will-change: transform, box-shadow;
-    }
-    .screen:hover {
-      transform: scale(1.1) rotate(3deg);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 107, 107, 0.6), 0 0 35px rgba(155, 89, 182, 0.5);
-    }
-    .screen::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 20px;
-      box-shadow: inset 0 0 10px rgba(255, 107, 107, 0.4), inset 0 0 20px rgba(155, 89, 182, 0.3);
-      pointer-events: none;
-    }
-    .header {
-      background: linear-gradient(45deg, #ff6b6b, #9b59b6);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 15px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 700;
-      width: auto;
-      position: absolute;
-      top: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 107, 107, 0.5);
-      animation: pulse 2s infinite ease-in-out;
-      text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-    }
-    .content {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-    }
-    .image {
-      width: 90px;
-      height: 90px;
-      background-color: #fff;
-      border-radius: 15px;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 10px rgba(255, 107, 107, 0.2);
-      transition: transform 0.3s ease;
-    }
-    .image:hover {
-      transform: scale(1.15);
-    }
-    .image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .button-container {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    .button {
-      background: linear-gradient(45deg, #ff6b6b, #9b59b6);
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 15px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 107, 107, 0.4);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 20px rgba(255, 107, 107, 0.6), 0 0 25px rgba(155, 89, 182, 0.5);
-    }
-    .button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.6s ease, height 0.6s ease;
-    }
-    .button:active::before {
-      width: 200px;
-      height: 200px;
-    }
-    .copy-button {
-      background: linear-gradient(45deg, #6b7280, #4b5563);
-      color: #fff;
-      padding: 10px 15px;
-      border-radius: 15px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(107, 114, 128, 0.4);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .copy-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 20px rgba(107, 114, 128, 0.6), 0 0 25px rgba(75, 85, 99, 0.5);
-    }
-    .copy-button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.6s ease, height 0.6s ease;
-    }
-    .copy-button:active::before {
-      width: 150px;
-      height: 150px;
-    }
-    .container::-webkit-scrollbar {
-      display: none;
-    }
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 1);
-      padding: 14px 0;
-      z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 107, 107, 0.3);
-      border-bottom: 2px solid #ff6b6b;
-    }
-    nav ul {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      list-style: none;
-      margin: 0;
-      padding: 0 10px;
-      overflow-x: auto;
-      white-space: nowrap;
-      scrollbar-width: thin;
-      scrollbar-color: #ff6b6b transparent;
-    }
-    nav li {
-      flex: none;
-      margin: 0 8px;
-    }
-    nav a {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 20px;
-      font-weight: 900;
-      padding: 10px 14px;
-      border-radius: 10px;
-      position: relative;
-      display: inline-block;
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    nav a:hover, nav a.active {
-      background: rgba(255, 255, 255, 0.1);
-    }
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: 4px;
-      left: 50%;
-      width: 0;
-      height: 2px;
-      background: #ffffff;
-      transition: width 0.3s ease, left 0.3s ease;
-      transform: translateX(-50%);
-    }
-    nav a:hover::after, nav a.active::after {
-      width: 50%;
-    }
-    nav::-webkit-scrollbar {
-      height: 6px;
-    }
-    nav::-webkit-scrollbar-thumb {
-      background: linear-gradient(45deg, #ff6b6b, #9b59b6);
-      border-radius: 6px;
-    }
-    nav::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-    @keyframes gridPulse {
-      0% { opacity: 0.2; }
-      50% { opacity: 0.4; }
-      100% { opacity: 0.2; }
-    }
-    @media (max-width: 400px) {
-      .container {
-        width: min(350px, 95%);
-        height: 480px;
-        padding: 10px;
-        gap: 15px;
-      }
-      .screen {
-        width: min(220px, 85%);
-        height: 460px;
-        padding: 15px;
-        background: transparent;
-      }
-      .header {
-        font-size: 13px;
-        padding: 8px 14px;
-        text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-      }
-      .image {
-        width: 70px;
-        height: 70px;
-      }
-      .button {
-        font-size: 13px;
-        padding: 8px 15px;
-      }
-      .copy-button {
-        font-size: 13px;
-        padding: 8px 10px;
-      }
-      .button-container {
-        gap: 8px;
-        margin-top: 15px;
-      }
-      nav {
-        padding: 8px 0;
-      }
-      nav ul {
-        padding: 0 5px;
-      }
-      nav li {
-        margin: 0 6px;
-      }
-      nav a {
-        font-size: 18px;
-        font-weight: 900;
-        padding: 8px 12px;
-        background: rgba(255, 255, 255, 0.1);
-      }
-      nav a:hover, nav a.active {
-        background: rgba(255, 255, 255, 0.1);
-      }
-      .gradient-overlay {
-        opacity: 0.2;
-      }
-      .grid-overlay {
-        background-size: 30px 30px;
-        opacity: 0.15;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Trải nghiệm Sigma Cloud không giới hạn!">
+    <title>Sigma Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .section {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .section.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .home-section {
+            flex-direction: column;
+            background: #ffd1dc;
+        }
+        .home-navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #333;
+            display: flex;
+            justify-content: center;
+            padding: 15px 0;
+            z-index: 10;
+            animation: slideDown 0.5s ease-out;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .home-navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 25px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .home-navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        .home-navbar a.active {
+            background-color: #ff4081;
+            color: #fff;
+        }
+        .home-content {
+            margin-top: 70px;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .home-tab-content {
+            display: none;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(20px);
+        }
+        .home-tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.5s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .home-tab {
+            background: transparent;
+            padding: 30px;
+            text-align: center;
+        }
+        .home-tab img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        .home-tab img:hover {
+            transform: scale(1.1);
+        }
+        .home-tab h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .home-tab p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .home-tab button.get-cloud {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            background-color: #ff4500;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .home-tab button.get-cloud:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.5);
+        }
+
+        .me-tab {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .me-tab img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        .me-tab img:hover {
+            transform: scale(1.1);
+        }
+        .me-tab h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #ff4081;
+        }
+        .me-tab p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        .me-tab .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .me-tab button {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .me-tab button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .me-tab button.discord-sigmadev {
+            background-color: #7289da;
+            color: white;
+        }
+        .me-tab button.youtube {
+            background-color: #ff0000;
+            color: white;
+        }
+        .me-tab button.cach-xai {
+            background-color: #00cc00;
+            color: white;
+        }
+        .me-tab button.discord-turbolite {
+            background-color: #a300a3;
+            color: white;
+        }
+
+        .creating-section {
+            flex-direction: column;
+        }
+        .creating-container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        .creating-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #ff4081;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .creating-message {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .cloud-section {
+            flex-direction: column;
+            background: #000;
+        }
+        .cloud-container {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(145deg, #1a1a1a, #2c2c2c);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .cloud-status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.9), rgba(50, 50, 50, 0.9));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 12px;
+            color: #fff;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .cloud-status-bar .left {
+            display: flex;
+            gap: 10px;
+        }
+        .cloud-status-bar .right {
+            display: flex;
+            gap: 10px;
+        }
+        .cloud-status-bar .right img {
+            width: 16px;
+            height: 16px;
+            filter: invert(100%);
+            transition: transform 0.3s ease;
+        }
+        .cloud-status-bar .right img:hover {
+            transform: rotate(360deg);
+        }
+        .cloud-screen {
+            width: 100%;
+            height: calc(100% - 30px);
+            position: relative;
+            top: 30px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 20px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            animation: fadeInApp 0.5s ease forwards;
+            animation-delay: calc(var(--index) * 0.1s);
+        }
+        @keyframes fadeInApp {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .app-icon:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+        }
+        .app-icon:active {
+            transform: scale(0.95);
+        }
+        .app-icon img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: border-color 0.3s ease;
+        }
+        .app-icon:hover img {
+            border-color: #ff4081;
+        }
+        .app-icon span {
+            color: #fff;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 5px;
+            word-wrap: break-word;
+            max-width: 80px;
+            text-shadow: 1px 1px 3px #000;
+        }
+        .folder-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInModal 0.3s ease;
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .folder-modal.active {
+            display: flex;
+        }
+        .folder-content {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: popUp 0.3s ease;
+        }
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .folder-content h3 {
+            font-size: 22px;
+            color: #ff4081;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .folder-content .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 15px;
+        }
+        .iframe-container {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 30px);
+            display: none;
+            background: #000;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            animation: fadeInIframe 0.5s ease-out;
+        }
+        @keyframes fadeInIframe {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .iframe-container.active {
+            display: block;
+            opacity: 1;
+        }
+        .iframe-container iframe {
+            width: 100%;
+            height: 100yanimation: fadeInIframe 0.5s ease-out;
+        }
+        .control-buttons {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            z-index: 20;
+            animation: slideUpButtons 0.5s ease-out;
+        }
+        @keyframes slideUpButtons {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .control-buttons button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .control-buttons button img {
+            width: 24px;
+            height: 24px;
+            filter: invert(100%);
+        }
+        .control-buttons button:hover {
+            transform: scale(1.1);
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        .settings-app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            background: #1a1a1a;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .settings-app h3 {
+            color: #ff4081;
+            margin-bottom: 15px;
+        }
+        .settings-app label {
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .settings-app input, .settings-app select {
+            width: 80%;
+            max-width: 300px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #333;
+            color: #fff;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        .settings-app input:focus, .settings-app select:focus {
+            outline: none;
+            border-color: #ff4081;
+            box-shadow: 0 0 5px rgba(255, 64, 129, 0.5);
+        }
+        .settings-app .preview-image {
+            max-width: 100%;
+            max-height: 150px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+        }
+        .settings-app .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .settings-app .preset-buttons button {
+            padding: 6px;
+            background: #ff4081;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .settings-app .preset-buttons button:hover {
+            background: #e91e63;
+        }
+        .settings-app .button-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .settings-app button {
+            padding: 8px 15px;
+            background: #ff4081;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .settings-app button:hover {
+            background: #e91e63;
+            transform: scale(1.05);
+        }
+        .settings-app button.secondary {
+            background: #7289da;
+        }
+        .settings-app button.secondary:hover {
+            background: #5b6eae;
+        }
+        .settings-app .toast {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .settings-app .toast.show {
+            opacity: 1;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .retry-button {
+            padding: 8px 16px;
+            background: #ff4081;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: none;
+        }
+        .retry-button:hover {
+            background: #e91e63;
+        }
+
+        @media (max-width: 1024px) and (min-width: 601px) {
+            .cloud-container {
+                width: 95%;
+                height: 90vh;
+                background: url('https://png.pngtree.com/background/20250104/original/pngtree-free-hd-wallpaper-4k-new-background-picture-image_15546678.jpg') no-repeat center center;
+                background-size: cover;
+                border-radius: 15px;
+                animation: scaleIn 0.5s ease-out;
+            }
+            @keyframes scaleIn {
+                from { transform: scale(0.9); opacity: 0; }
+                to { transform: scale(1); opacity: 1; }
+            }
+            .cloud-screen {
+                height: calc(100% - 30px);
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+                padding: 15px;
+            }
+            .app-icon {
+                width: 90px;
+                height: 90px;
+            }
+            .app-icon img {
+                width: 70px;
+                height: 70px;
+            }
+            .iframe-container {
+                height: calc(100% - 30px);
+                border-radius: 15px;
+            }
+            .control-buttons {
+                z-index: 20;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .home-navbar a {
+                font-size: 16px;
+                padding: 8px 15px;
+            }
+            .home-tab {
+                padding: 20px;
+            }
+            .app-icon {
+                width: 70px;
+                height: 70px;
+            }
+            .app-icon img {
+                width: 50px;
+                height: 50px;
+            }
+            .folder-content {
+                max-width: 90%;
+                padding: 20px;
+            }
+            .folder-content h3 {
+                font-size: 18px;
+            }
+            .folder-content .app-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 10px;
+            }
+            .cloud-container {
+                width: 95%;
+                height: 85vh;
+            }
+            .iframe-container {
+                height: calc(100% - 30px);
+            }
+            .settings-app {
+                margin: 8px;
+                padding: 10px;
+            }
+            .settings-app h3 {
+                font-size: 20px;
+            }
+            .settings-app .settings-section {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
-<body>
-  <div id="particles-js"></div>
-  <div class="gradient-overlay"></div>
-  <div class="grid-overlay"></div>
-  <nav>
-    <ul>
-      <li><a href="#device-1">Thiết Bị App Launcher</a></li>
-      <li><a href="#device-2">Thiết Bị Roblox</a></li>
-      <li><a href="#device-3">Thiết Bị Roblox VN</a></li>
-      <li><a href="#device-4">Thiết Bị Shadow 3</a></li>
-      <li><a href="#device-5">Thiết Bị Popyy Meow</a></li>
-      <li><a href="#device-6">Thiết Bị Half Anniv</a></li>
-      <li><a href="#device-7">Thiết Bị N/A 2</a></li>
-      <li><a href="#device-8">Thiết Bị N/A</a></li>
-      <li><a href="#device-9">Thiết Bị Goku Siêu Cấp</a></li>
-      <li><a href="#device-10">Thiết Bị Gura Impact</a></li>
-      <li><a href="#device-11">Thiết Bị Miku Impact</a></li>
-      <li><a href="#device-12">Thiết Bị Human Heros</a></li>
-      <li><a href="#device-13">Thiết Bị Genshin Impact</a></li>
-      <li><a href="#device-14">Thiết Bị Free Fire Sibikidi</a></li>
-      <li><a href="#device-15">Thiết Bị Honkai Star</a></li>
-      <li><a href="#device-16">Thiết Bị Terrarum</a></li>
-      <li><a href="#device-17">Thiết Bị Zombie Island</a></li>
-      <li><a href="#device-18">Thiết Bị Chaser</a></li>
-      <li><a href="#device-19">Thiết Bị Scarlett Girl</a></li>
-      <li><a href="#device-20">Thiết Bị Walking Dead</a></li>
-      <li><a href="#device-21">Thiết Bị Battle Bears</a></li>
-      <li><a href="#device-22">Thiết Bị Kepler 2100</a></li>
-      <li><a href="#device-23">Thiết Bị Magic Forest</a></li>
-      <li><a href="#device-24">Thiết Bị Ancient Seal</a></li>
-      <li><a href="#device-25">Thiết Bị Nexus</a></li>
-      <li><a href="#device-26">Thiết Bị Eternal Evolution</a></li>
-      <li><a href="#device-27">Thiết Bị Blue Archive</a></li>
-      <li><a href="#device-28">Thiết Bị Genshin Inpact</a></li>
-      <li><a href="#device-29">Thiết Bị Wuthering Waves</a></li>
-      <li><a href="#device-30">Thiết Bị Jujutsu Kaisen</a></li>
-      <li><a href="#device-31">Thiết Bị Ash Echoes</a></li>
-      <li><a href="#device-32">Thiết Bị Arise</a></li>
-      <li><a href="#device-33">Thiết Bị Punishing</a></li>
-      <li><a href="#device-34">Thiết Bị Ác Quỷ Free Fire</a></li>
-      <li><a href="#device-35">Thiết Bị Free Fire Max</a></li>
-      <li><a href="#device-36">Thiết Bị Honkai Impact 3rd</a></li>
-      <li><a href="#device-37">Thiết Bị Honor of Kings</a></li>
-      <li><a href="#device-38">Thiết Bị PUBG Mobile</a></li>
-      <li><a href="#device-39">Thiết Bị Aether Gazer</a></li>
-      <li><a href="#device-40">Thiết Bị ブルーアーカイブ</a></li>
-      <li><a href="#device-41">Thiết Bị EA SPORTS FC™</a></li>
-      <li><a href="#device-42">Thiết Bị EA Mobile Legends™</a></li>
-      <li><a href="#device-43">Thiết Bị League of Legends™</a></li>
-      <li><a href="#device-44">Thiết Bị ski</a></li>
-      <li><a href="#device-45">Thiết Bị Thử Nghiệm</a></li>
-    </ul>
-  </nav>
-  <div class="container">
-    <div class="screen" id="device-1">
-      <div class="header">Thiết Bị App Launcher</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/apps-content/com.uncube.launcher3/icon/now.png" alt="App Launcher" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://now.gg/apps/uncube/7074_t1/now.html","_blank")'>Vào Chơi</div>
+<body oncontextmenu="return false;">
+    <div id="home" class="section home-section active">
+        <div class="home-navbar">
+            <a href="#home-tab" class="tab-link active" onclick="switchTab(event, 'home-tab')">Home</a>
+            <a href="#me-tab" class="tab-link" onclick="switchTab(event, 'me-tab')">Me</a>
         </div>
-      </div>
-    </div>
-    <div class="screen" id="device-2">
-      <div class="header">Thiết Bị Roblox</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn6.aptoide.com/imgs/0/c/2/0c215277a5b9286286656f65318057f8_icon.png?w=128" alt="Roblox" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eTFUVFAxVHBxUCxcaAlQJFBkXFANWGBQJCxQJGg8SFBVUT0tLSktUCRQZFxQD","_blank")'>Vào Chơi</div>
-          <div class="copy-button" onclick="copyLink()">Sao Chép</div>
+        <div class="home-content">
+            <div id="home-tab" class="home-tab-content home-tab active">
+                <img src="https://cdn-icons-png.flaticon.com/128/149/149452.png" alt="Logo">
+                <h1>Welcome User to Sigma Cloud</h1>
+                <p>Web developed by SigmaDev with Grok AI</p>
+                <button class="get-cloud" onclick="navigateTo('creating')">Get Cloud</button>
+            </div>
+            <div id="me-tab" class="home-tab-content me-tab">
+                <img src="https://cdn-icons-png.flaticon.com/128/149/149452.png" alt="Logo">
+                <h1>Sigma User</h1>
+                <p>ID: ai mà biết được</p>
+                <button onclick="window.location.hash='welfare'">Welfare Center <span style="color: #00b0ff;">💎 999999</span></button>
+                <p>Ứng dụng được phát triển bởi SigmaDev, code với Grok AI, link now.gg từ Turbo Lite STBID</p>
+                <div class="button-grid">
+                    <button class="discord-sigmadev" onclick="window.open(base64_decode('aHR0cHM6Ly9kaXNjb3JkLmdnL2ZLM0JaV3R4Q0E='), '_blank')">Discord SigmaDev</button>
+                    <button class="youtube" onclick="window.open(base64_decode('aHR0cHM6Ly93d3cueW91dHViZS5jb20vQGR1Y3RyZW55dA=='), '_blank')">YouTube</button>
+                    <button class="cach-xai" onclick="window.open(base64_decode('aHR0cHM6Ly93d3cudHVyYm9saXRlLmFzaWEvMjAyNS8wNC91Z3Bob25lLWNhY2gtbGF5LWtleS5odG1sP209MQ=='), '_blank')">Cách xài</button>
+                    <button class="discord-turbolite" onclick="window.open(base64_decode('aHR0cHM6Ly9kaXNjb3JkLmdnL0JHWndzZDYzR3U='), '_blank')">Discord turbolite</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    <div class="screen" id="device-3">
-      <div class="header">Thiết Bị Roblox VN</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/84011b87d8d54e4482a6cd25cdb0ba441728551369.jpg?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Roblox VN" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/roblox-vng-cloud-online.html","_blank")'>Vào Chơi</div>
+
+    <div id="creating" class="section creating-section">
+        <div class="creating-container">
+            <div class="creating-spinner"></div>
+            <p class="creating-message">Đang khởi tạo Cloud Phone...</p>
         </div>
-      </div>
     </div>
-    <div class="screen" id="device-4">
-      <div class="header">Thiết Bị Shadow 3</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/apps-content/8861/icon/shadow-fight-3.png" alt="Shadow Fight 3" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-4.now.gg/apps/nekki/8861/shadow-fight-3.html","_blank")'>Vào Chơi</div>
+
+    <div id="cloud" class="section cloud-section">
+        <div class="cloud-container">
+            <div class="cloud-status-bar">
+                <div class="left">
+                    <span id="currentTime"></span>
+                    <span>5G</span>
+                </div>
+                <div class="right">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/wifi.png" alt="WiFi">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/battery-level.png" alt="Battery">
+                </div>
+            </div>
+            <div class="cloud-screen" id="cloudScreen">
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </div>
+            <div id="iframeContainer"></div>
+            <div class="control-buttons">
+                <button onclick="closeIframe()"><img src="https://cdn-icons-png.flaticon.com/128/11502/11502447.png" alt="Square"></button>
+                <button onclick="closeIframe()"><img src="https://cdn-icons-png.flaticon.com/128/5720/5720434.png" alt="Circle"></button>
+                <button onclick="reloadIframe()"><img src="https://cdn-icons-png.flaticon.com/128/7710/7710436.png" alt="Triangle"></button>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="screen" id="device-5">
-      <div class="header">Thiết Bị Popyy Meow</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/apps-content/com.MOBGames.PoppyMobileChap1/icon/poppy-playtime.png" alt="Poppy Playtime" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUGgsLCFQWFBlWHBoWHghWCA8OHxIUVEpJQkhUCxQLCwJWCxcaAg8SFh5VEw8WFw==","_blank")'>Vào Chơi</div>
+        <div id="koLoiModal" class="folder-modal">
+            <div class="folder-content">
+                <h3>ko lỗi app</h3>
+                <div class="app-grid" id="koLoiApps"></div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="screen" id="device-6">
-      <div class="header">Thiết Bị Half Anniv</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/now-gg-store/531/jp.boi.mementomori.android.dev/6465e7e9db2f0a9195258bf0/assets/en/game-icon.png" alt="Memento Mori" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUCxcaAlQZGhUQVhQdVhIVFRQNGg8SFBVUSUtKQ1QWHhYeFQ8UVhYUCRI","_blank")'>Vào Chơi</div>
+        <div id="loiModal" class="folder-modal">
+            <div class="folder-content">
+                <h3>lỗi app</h3>
+                <div class="app-grid" id="loiApps"></div>
+            </div>
         </div>
-      </div>
     </div>
-    <div class="screen" id="device-7">
-      <div class="header">Thiết Bị N/A 2</div>
-      <div class="content">
-        <div class="image"><img src="https://i.imgur.com/ry2wuZy.jpeg" alt="N/A 2" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUDx4IDx8JEg0eT1UVFAxVHBxUGgsLCFQIEAINDlRMQ0pPJA9KVBkaDw8XHlYZHhoJCFYRFAIJEh8eVRMPFhc=","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-8">
-      <div class="header">Thiết Bị N/A</div>
-      <div class="content">
-        <div class="image"><img src="https://i.imgur.com/ry2wuZy.jpeg" alt="N/A" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://testdrive7.now.gg/apps/plug-in-digital/9437_t1/human-heroes-curie-on-matter-ml.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-9">
-      <div class="header">Thiết Bị Goku Siêu Cấp</div>
-      <div class="content">
-        <div class="image"><img src="https://i.imgur.com/YaausjQ.jpeg" alt="Dragon Ball Legends" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://staging-demo.abctest.in/apps/bandai-namco-entertainment-inc-/1393/dragon-ball-legends.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-10">
-      <div class="header">Thiết Bị Gura Impact</div>
-      <div class="content">
-        <div class="image"><img src="https://i.imgur.com/8k57EXc.jpeg" alt="Gura Impact" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://now.gg/apps/a/","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-11">
-      <div class="header">Thiết Bị Miku Impact</div>
-      <div class="content">
-        <div class="image"><img src="https://i.imgur.com/q1wzUwl.jpeg" alt="Assault Lily" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://now.gg/apps/pokelabo-inc/5139/assault-lily-last-bullet.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-12">
-      <div class="header">Thiết Bị Human Heros</div>
-      <div class="content">
-        <div class="image"><img src="https://images.sftcdn.net/images/t_app-icon-m/p/c02e9279-28df-462a-b7dc-4ab1f0c77036/2583136360/human-heroes-curie-on-matter-logo" alt="Human Heroes" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://testdrive7.now.gg/apps/plug-in-digital/9437_t1/human-heroes-curie-on-matter-ml.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-13">
-      <div class="header">Thiết Bị Genshin Impact</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252Fcom.miHoYo.GenshinImpact%252Ficon%252Fgenshin-impact.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Genshin Impact" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUExBWEx4JFFYeFQ8eCQ8aEhUWHhUPVhgUVhcSFhIPHh9USk1NT1QeDx4JFRoXVh4NFBcODxIUFVUTDxYX","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-14">
-      <div class="header">Thiết Bị Free Fire Sibikidi</div>
-      <div class="content">
-        <div class="image"><img src="https://i.imgur.com/i4YEa3X.jpeg" alt="Free Fire" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://stagingngg.net/apps/garena-international-i/1398/free-fire.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-15">
-      <div class="header">Thiết Bị Honkai Star</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/apps-content/com.HoYoverse.hkrpgoversea/icon/honkai-star-rail.png" alt="Honkai Star Rail" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://stagingngg.net/apps/cognosphere-pte-ltd/1591/honkai-star-rail.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-16">
-      <div class="header">Thiết Bị Terrarum</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F9059%252Ficon%252Ftales-of-terrarum.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Tales of Terrarum" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/electronic-soul/9059/tales-of-terrarum.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-17">
-      <div class="header">Thiết Bị Zombie Island</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F8888%252Ficon%252Fzombieland-doomsday-survival.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Zombieland" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/juefeng-games/8888/zombieland-doomsday-survival.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-18">
-      <div class="header">Thiết Bị Chaser</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/apps-content/10417/icon/chasers.png" alt="Chasers" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUFxIdDhcIHlRKS09KTFQYExoIHgkIVRMPFhc=","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-19">
-      <div class="header">Thiết Bị Scarlett Girl</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/apps-content/9887/icon/scarlet-girls.png" alt="Scarlet Girls" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUGQ4JCA8cGhYeVEJDQ0xUCBgaCRceD1YcEgkXCFUTDxYX","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-20">
-      <div class="header">Thiết Bị Walking Dead</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F10512%252Ficon%252Fthe-walking-dead-survivors.png%26w%3D256%26q%3D80&w=1440&q=70" alt="The Walking Dead" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/galaxy-play-technology-limited/10512/the-walking-dead-survivors.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-21">
-      <div class="header">Thiết Bị Battle Bears</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F8270%252Ficon%252Fbattle-bears-heroes.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Battle Bears" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/battlecoin-games/8270/battle-bears-heroes.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-22">
-      <div class="header">Thiết Bị Kepler 2100</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/apps-content/9191/icon/kepler-2100.png" alt="Kepler 2100" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/zeyou-game/9191/kepler-2100.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-23">
-      <div class="header">Thiết Bị Magic Forest</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/apps-content/9030/icon/magic-forest-dragon-quest.png" alt="Magic Forest" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/sugar-game-network-limited/9030/magic-forest-dragon-quest.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-24">
-      <div class="header">Thiết Bị Ancient Seal</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F10382%252Ficon%252Fancient-seal-the-exorcist.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Ancient Seal" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/lovo-entertainment-hong-kong-limited/10382/ancient-seal-the-exorcist.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-25">
-      <div class="header">Thiết Bị Nexus</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252F8706%252Ficon%252Fnexus-nebula-echoes.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Nexus" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://hosted-5.now.gg/apps/magic-game/8706/nexus-nebula-echoes.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-26">
-      <div class="header">Thiết Bị Eternal Evolution</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252Fcom.herogame.gplay.eternalevolution.idlerpg%252Ficon%252Feternal-evolution.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Eternal Evolution" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://webproxy.proxyshare.com/request?p=GgkeGkYuKF0ORhMPDwsIQVRUFRQMVRwcVBoLCwhUExBWEx4JFFYeFQ8eCQ8aEhUWHhUPVhgUVhcSFhIPHh9USk1NT1QeDx4JFRoXVh4NFBcODxIUFVUTDxYX","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-27">
-      <div class="header">Thiết Bị Blue Archive</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/482c8941475e40e399f365194ff87a5c1728455828.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Blue Archive" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/blue-archive.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-28">
-      <div class="header">Thiết Bị Genshin Inpact</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/4dfe62cd7c3f4b2dafe7642693b652de1728456516.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Genshin Impact" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/genshin-impact.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-29">
-      <div class="header">Thiết Bị Wuthering Waves</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/455f8238e9b44cb3b4b6055a3a0a051d1728452029.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Wuthering Waves" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/wuthering-waves.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-30">
-      <div class="header">Thiết Bị Jujutsu Kaisen</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/a3505ca781474a839ae5c14e81a56aa61730962649.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Jujutsu Kaisen" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/jujutsu-kaisen-phantom-parade-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-31">
-      <div class="header">Thiết Bị Ash Echoes</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/19a2c6f333744c299749ea1b29ffe8531731472925.webp?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Ash Echoes" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/ash-echoes-global-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-32">
-      <div class="header">Thiết Bị Arise</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/0f8a8f037249466bb9d6bb9c73d0ed2a1739515022.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Solo Leveling Arise" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/solo-leveling-arise-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-33">
-      <div class="header">Thiết Bị Punishing</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/62e7403ee3ad4aefa652668b2de17d8a1728535412.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Punishing Gray Raven" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/punishing-gray-raven-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-34">
-      <div class="header">Thiết Bị Ác Quỷ Free Fire</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/b8e2aca38996414ab40a6960bcb9463b1728458849.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Free Fire" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/free-fire.html?start=1","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-35">
-      <div class="header">Thiết Bị Free Fire Max</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/a2c257385776441d86efc902cf0df7bc1739100963.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Free Fire Max" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/free-fire-max-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-36">
-      <div class="header">Thiết Bị Honkai Impact 3rd</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/3c7d5324c87145dd9387db23097dce661732273401.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Honkai Impact 3rd" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/honkai-impact-3rd-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-37">
-      <div class="header">Thiết Bị Honor of Kings</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/20c81b798f934791afc33209cdc1be431728552472.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Honor of Kings" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/honor-of-kings-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-38">
-      <div class="header">Thiết Bị PUBG Mobile</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/8da70c84c2ab4197ab447488fe6ef73f1728469957.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="PUBG Mobile" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/pubg-mobile-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-39">
-      <div class="header">Thiết Bị Aether Gazer</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/6d411ea6a5404859b826c22faec8a3331728465612.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Aether Gazer" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/aether-gazer-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-40">
-      <div class="header">Thiết Bị ブルーアーカイブ</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/1eb1698f7e104bc78d0b9b9114beb5051728456010.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Blue Archive JP" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/com-yostar-jp-blue-archive.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-41">
-      <div class="header">Thiết Bị EA SPORTS FC™</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/f84c40056d7c472aa74619de83b3f1e21728460793.jpg?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="EA SPORTS FC" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/ea-sports-fc-uefa-euro-2024.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-42">
-      <div class="header">Thiết Bị EA Mobile Legends™</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/5ce5c3d7c3134644a0da7bfe95d02d951728468957.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Mobile Legends" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/mobile-legends-bang-bang-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-43">
-      <div class="header">Thiết Bị League of Legends™</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/cb91f0b4f99c440db9005e5adcf6493f1731678885.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="League of Legends" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/league-of-legends-wild-rift-cloud-online.html","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-44">
-      <div class="header">Thiết bị ski</div>
-      <div class="content">
-        <div class="image"><img src="https://res.ldrescdn.com/rms/ldplayer/process/img/d5f9b8e0bb284130859aeef06618eab11735489302.png?image_process=format,webp&x-oss-process=image%2Fresize%2Cw_384%2Fquality%2CQ_75" alt="Tears of Themis" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://www.easyfun.gg/cloud-games/tears-of-themis-cloud-online.html?start=1","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-    <div class="screen" id="device-45">
-      <div class="header">Thiết Bị Thử Nghiệm</div>
-      <div class="content">
-        <div class="image"><img src="https://cdn.now.gg/assets-opt/_next/image?url=https%3A%2F%2Fcdn.now.gg%2Fassets-opt%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fcdn.now.gg%252Fapps-content%252Fdefault%252Fimages%252FIcon_512.png%26w%3D256%26q%3D80&w=1440&q=70" alt="Test App" loading="lazy"></div>
-        <div class="button-container">
-          <div class="button" onclick='window.open("https://cloud.vmoscloud.com/screen/share/52F5-71E4-839C-4165-9183-2D1A-C37B-45F7","_blank")'>Vào Chơi</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
-    // Initialize Particles.js
-    particlesJS("particles-js", {
-      particles: {
-        number: { value: 120, density: { enable: true, value_area: 800 } },
-        color: { value: ["#ff6b6b", "#9b59b6", "#ffffff", "#ffd700"] },
-        shape: { type: ["circle", "star"], stroke: { width: 0 } },
-        opacity: { value: 0.6, random: true },
-        size: { value: 4, random: true },
-        line_linked: { enable: true, distance: 120, color: "#ffffff", opacity: 0.3, width: 1 },
-        move: { enable: true, speed: 3, direction: "none", random: true }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" } },
-        modes: { grab: { distance: 200, line_linked: { opacity: 0.6 } }, push: { particles_nb: 5 } }
-      },
-      retina_detect: true
+
+    <script>
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 83) || (e.ctrlKey && e.keyCode == 85)) {
+            e.preventDefault();
+            return false;
+        }
     });
-    // Initialize Tilt.js for 3D hover effects
-    VanillaTilt.init(document.querySelectorAll(".screen"), {
-      max: 20,
-      speed: 300,
-      glare: true,
-      "max-glare": 0.4,
-      scale: 1.05
-    });
-    // Navigation bar smooth scrolling and active state
-    document.querySelectorAll("nav a").forEach(anchor => {
-      anchor.addEventListener("click", function(e) {
+
+    document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
-        console.log(`Clicked: ${this.getAttribute("href")}`); // Debug log
-        // Remove active class from all links
-        document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
-        // Add active class to clicked link
-        this.classList.add("active");
-        const targetId = this.getAttribute("href").substring(1);
-        const targetElement = document.getElementById(targetId);
-        if (!targetElement) {
-          console.error(`Target element #${targetId} not found`);
-          return;
-        }
-        const container = document.querySelector(".container");
-        // Calculate scroll position to center the target element
-        const containerWidth = container.offsetWidth;
-        const targetWidth = targetElement.offsetWidth;
-        const targetOffset = targetElement.offsetLeft;
-        const scrollPosition = targetOffset - (containerWidth - targetWidth) / 2;
-        container.scrollTo({
-          left: scrollPosition,
-          behavior: "smooth"
-        });
-        // GSAP animation for target element
-        gsap.to(targetElement, {
-          rotationY: 360,
-          duration: 0.8,
-          ease: "power2.out",
-          onComplete: () => gsap.set(targetElement, { rotationY: 0 })
-        });
-      });
+        return false;
     });
-    // Update active nav link based on scroll position
-    const container = document.querySelector(".container");
-    container.addEventListener("scroll", () => {
-      const screens = document.querySelectorAll(".screen");
-      let currentScreen = null;
-      screens.forEach(screen => {
-        const rect = screen.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        // Check if screen is near the center of the container
-        if (rect.left >= containerRect.left - rect.width / 2 && rect.left <= containerRect.left + rect.width / 2) {
-          currentScreen = screen;
-        }
-      });
-      if (currentScreen) {
-        const currentId = currentScreen.id;
-        document.querySelectorAll("nav a").forEach(a => {
-          a.classList.remove("active");
-          if (a.getAttribute("href") === `#${currentId}`) {
-            a.classList.add("active");
-          }
-        });
-      }
-    });
-    // GSAP animations for nav links
-    gsap.from("nav a", {
-      opacity: 0,
-      y: -20,
-      stagger: 0.03,
-      duration: 0.6,
-      ease: "power2.out"
-    });
-    // Parallax effect for screen backgrounds
-    container.addEventListener("scroll", () => {
-      document.querySelectorAll(".screen").forEach(screen => {
-        const rect = screen.getBoundingClientRect();
-        const offset = rect.left / window.innerWidth;
-        screen.style.backgroundPosition = `${50 + offset * 25}% center`;
-      });
-    });
-    // Copy link function
-    function copyLink() {
-      const link = "https://now.gg/apps/Blox-fruit/19901/Blox-fruit.html";
-      navigator.clipboard.writeText(link).then(() => {
-        alert("Đã sao chép liên kết: " + link);
-      }).catch(err => {
-        console.error("Lỗi khi sao chép liên kết: ", err);
-        alert("Không thể sao chép liên kết. Vui lòng thử lại.");
-      });
+
+    (function() {
+        const threshold = 160;
+        setInterval(function() {
+            if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+                window.location.reload();
+            }
+        }, 1000);
+    })();
+
+    function updateTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours % 12 || 12;
+        document.getElementById('currentTime').textContent = `${displayHours}:${minutes} ${ampm}`;
     }
-  </script>
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    let previousSection = 'home';
+    let currentSection = window.location.hash.replace('#', '') || 'home';
+    let initializationComplete = false;
+
+    function navigateTo(section) {
+        previousSection = currentSection;
+        currentSection = section;
+        window.location.hash = section;
+        showSection(section);
+    }
+
+    function checkKeyStatus() {
+        return true;
+    }
+
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => section.classList.remove('active'));
+
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+
+            if (sectionId === 'cloud') {
+                window.onbeforeunload = () => 'Bạn có chắc chắn muốn thoát? Dữ liệu có thể bị mất!';
+            } else {
+                window.onbeforeunload = null;
+            }
+        }
+    }
+
+    function validateNavigation() {
+        if (currentSection === 'home-tab' || currentSection === 'me-tab') {
+            currentSection = 'home';
+        }
+
+        if (currentSection === 'creating' && previousSection !== 'home') {
+            navigateTo('home');
+            return;
+        }
+
+        if (currentSection === 'cloud' && previousSection !== 'creating') {
+            navigateTo('home');
+            return;
+        }
+
+        showSection(currentSection);
+    }
+
+    function switchTab(event, tabId) {
+        event.preventDefault();
+        const tabs = document.querySelectorAll('.home-tab-content');
+        const tabLinks = document.querySelectorAll('.tab-link');
+
+        tabs.forEach(tab => tab.classList.remove('active'));
+        tabLinks.forEach(link => link.classList.remove('active'));
+
+        const targetTab = document.getElementById(tabId);
+        if (targetTab) targetTab.classList.add('active');
+
+        const activeLink = document.querySelector(`.tab-link[href="#${tabId}"]`);
+        if (activeLink) activeLink.classList.add('active');
+
+        navigateTo(tabId);
+    }
+
+    const iframes = {};
+    let currentIframe = null;
+    let noVpnApps = [];
+    let need:VpnApps = [];
+
+    async function initializeIframes() {
+        const iframeContainer = document.getElementById('iframeContainer');
+
+        try {
+            let data;
+            try {
+                const response = await fetch(base64_decode('aHR0cHM6Ly9wYXN0ZWZ5LmFwcC9HekliYTNycC9yYXc='), { signal: AbortSignal.timeout(10000) });
+                if (!response.ok) {
+                    throw new Error(`Lỗi tải danh sách ứng dụng: ${response.status} ${response.statusText}`);
+                }
+                data = await response.json();
+            } catch (error) {
+                data = {
+                    noVpnApps: [
+                        { name: "bearx", url: "https://uproxy.online/ultraviolet/bearx" },
+                        { name: "scarlet girl", url: "https://uproxy.online/ultraviolet/scarlet" }
+                    ],
+                    needVpnApps: [
+                        { name: "terrarum", url: "https://uproxy.online/ultraviolet/terrarum" }
+                    ]
+                };
+                document.getElementById('errorMessage').textContent = "Lỗi tải danh sách ứng dụng, sử dụng danh sách mặc định.";
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+
+            noVpnApps = (data.noVpnApps || []).filter(app => app.name && app.url && app.url.startsWith('http'));
+            needVpnApps = (data.needVpnApps || []).filter(app => app.name && app.url && app.url.startsWith('http'));
+            const allApps = [...noVpnApps, ...needVpnApps, { name: "Setting", url: "" }];
+
+            if (!allApps.length) {
+                throw new Error('Không có ứng dụng nào để khởi tạo iframe');
+            }
+
+            allApps.forEach(app => {
+                const iframe = document.createElement('iframe');
+                const appName = app.name.toLowerCase().trim();
+                iframe.className = 'iframe-container';
+                iframe.id = `iframe-${appName.replace(/\s/g, '-')}`;
+                iframe.style.display = 'none';
+                iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
+                iframe.setAttribute('attributionsrc', '');
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+
+                if (app.name === "Setting") {
+                    const styleContent = `
+                        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+                        body {
+                            margin: 0;
+                            height: 100%;
+                            overflow: hidden;
+                            background: linear-gradient(135deg, #1e3c72, #2a5298);
+                            color: #fff;
+                            font-family: 'Roboto', sans-serif;
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        .settings-app {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: flex-start;
+                            padding: 15px;
+                            background: rgba(255, 255, 255, 0.1);
+                            backdrop-filter: blur(10px);
+                            border-radius: 10px;
+                            margin: 15px;
+                            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+                            overflow-y: auto;
+                        }
+                        .settings-app h3 {
+                            color: #ff4081;
+                            font-size: 24px;
+                            margin-bottom: 15px;
+                            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                        }
+                        .settings-section {
+                            width: 100%;
+                            max-width: 300px;
+                            margin-bottom: 15px;
+                        }
+                        .settings-section label {
+                            display: block;
+                            font-size: 14px;
+                            margin-bottom: 6px;
+                            color: #ddd;
+                        }
+                        .settings-section input, .settings-section select {
+                            width: 100%;
+                            padding: 8px;
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                            background: #333;
+                            color: #fff;
+                            font-size: 12px;
+                        }
+                        .settings-section input:focus, .settings-section select:focus {
+                            outline: none;
+                            border-color: #ff4081;
+                            box-shadow: 0 0 5px rgba(255, 64, 129, 0.5);
+                        }
+                        .preview-image {
+                            max-width: 100%;
+                            max-height: 150px;
+                            margin: 8px 0;
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                            display: none;
+                        }
+                        .button-group {
+                            display: flex;
+                            gap: 8px;
+                            justify-content: center;
+                        }
+                        button {
+                            padding: 8px 15px;
+                            background: #ff4081;
+                            color: #fff;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            font-weight: 700;
+                            transition: background 0.3s, transform 0.2s;
+                        }
+                        button:hover {
+                            background: #e91e63;
+                            transform: scale(1.05);
+                        }
+                        button.secondary {
+                            background: #7289da;
+                        }
+                        button.secondary:hover {
+                            background: #5b6eae;
+                        }
+                        .preset-buttons {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+                            gap: 8px;
+                            margin-top: 8px;
+                        }
+                        .preset-buttons button {
+                            padding: 5px;
+                            font-size: 10px;
+                        }
+                        .toast {
+                            position: fixed;
+                            bottom: 15px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            background: #333;
+                            color: #fff;
+                            padding: 8px 15px;
+                            border-radius: 5px;
+                            opacity: 0;
+                            transition: opacity 0.3s;
+                            z-index: 1000;
+                        }
+                        .toast.show {
+                            opacity: 1;
+                        }
+                        @media (max-width: 600px) {
+                            .settings-app {
+                                margin: 8px;
+                                padding: 10px;
+                            }
+                            .settings-app h3 {
+                                font-size: 20px;
+                            }
+                            .settings-section {
+                                max-width: 100%;
+                            }
+                        }
+                    `;
+                    const htmlContent = `
+                        <div class="settings-app">
+                            <h3>Sigma Cloud Settings</h3>
+                            <div class="settings-section">
+                                <label>Chọn Theme</label>
+                                <select id="themeSelect" onchange="applyTheme()">
+                                    <option value="dark">Tối</option>
+                                    <option value="light">Sáng</option>
+                                </select>
+                            </div>
+                            <div class="settings-section">
+                                <label>Thay đổi ảnh nền (Nhập URL)</label>
+                                <input type="text" id="backgroundUrl" placeholder="Nhập URL ảnh" oninput="previewImage()">
+                                <img id="previewImage" class="preview-image">
+                                <div class="preset-buttons">
+                                    <button onclick="setPreset(base64_decode('aHR0cHM6Ly9waWMuYnN0YXJzdGF0aWMuY29tL3VnYy82YjEyNmQ4ZjM1YzA5MzY0OWQyYzI4MTEwYTExZTY3Ny5qcGc='))">Preset 1</button>
+                                    <button onclick="setPreset(base64_decode('aHR0cHM6Ly91cy10dW5hLXNvdW5kcy1pbWFnZXMudm9pY2Vtb2QubmV0L2M2ZjNmYjMwLWU3ZWQtNDY2Mi04ZDBmLWJiYTIyZTc1ZTcwMC0xNjc2Mjg1NDgyNTg5LmpwZWc='))">Preset 2</button>
+                                    <button onclick="setPreset(base64_decode('aHR0cHM6Ly9vY2FmZS5uZXQvd3AtY29udGVudC91cGxvYWRzLzIwMjQvMTAvYW5oLW5lbi1tYXktdGluaC00ay0xLmpwZw=='))">Preset 3</button>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button onclick="saveBackground()">Lưu</button>
+                                <button class="secondary" onclick="cancelBackground()">Hủy</button>
+                                <button class="secondary" onclick="closeSettings()">Thoát</button>
+                            </div>
+                        </div>
+                        <div id="toast" class="toast"></div>
+                    `;
+                    const scriptContent = `
+                        function showToast(message, duration) {
+                            const toast = document.getElementById('toast');
+                            toast.textContent = message;
+                            toast.classList.add('show');
+                            setTimeout(() => toast.classList.remove('show'), duration);
+                        }
+                        function previewImage() {
+                            const url = document.getElementById('backgroundUrl').value;
+                            const preview = document.getElementById('previewImage');
+                            if (url) {
+                                preview.src = url;
+                                preview.style.display = 'block';
+                                preview.onerror = () => {
+                                    showToast('URL ảnh không hợp lệ!', 3000);
+                                    preview.style.display = 'none';
+                                };
+                            } else {
+                                preview.style.display = 'none';
+                            }
+                        }
+                        function setPreset(url) {
+                            document.getElementById('backgroundUrl').value = url;
+                            previewImage();
+                        }
+                        function saveBackground() {
+                            const url = document.getElementById('backgroundUrl').value;
+                            if (url) {
+                                window.parent.postMessage({ type: 'changeBackground', url: url }, '*');
+                                showToast('Đã lưu ảnh nền!', 2000);
+                            } else {
+                                showToast('Vui lòng nhập URL ảnh!', 2000);
+                            }
+                        }
+                        function cancelBackground() {
+                            const savedUrl = localStorage.getItem('backgroundUrl') || '';
+                            document.getElementById('backgroundUrl').value = savedUrl;
+                            const preview = document.getElementById('previewImage');
+                            if (savedUrl) {
+                                preview.src = savedUrl;
+                                preview.style.display = 'block';
+                            } else {
+                                preview.style.display = 'none';
+                            }
+                            showToast('Đã hủy thay đổi!', 2000);
+                        }
+                        function applyTheme() {
+                            const theme = document.getElementById('themeSelect').value;
+                            document.body.style.background = theme === 'light' 
+                                ? 'linear-gradient(135deg, #f5f7fa, #c3cfe2)' 
+                                : 'linear-gradient(135deg, #1e3c72, #2a5298)';
+                            document.querySelector('.settings-app').style.background = theme === 'light' 
+                                ? 'rgba(255, 255, 255, 0.8)' 
+                                : 'rgba(255, 255, 255, 0.1)';
+                        }
+                        function closeSettings() {
+                            window.parent.postMessage({ type: 'closeIframe' }, '*');
+                        }
+                        document.addEventListener('contextmenu', function(e) {
+                            e.preventDefault();
+                            showToast('Chuột phải đã bị vô hiệu hóa!', 2000);
+                            return false;
+                        });
+                        document.addEventListener('keydown', function(e) {
+                            if (
+                                e.keyCode === 123 || 
+                                (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
+                                (e.ctrlKey && e.keyCode === 85) || 
+                                (e.ctrlKey && e.keyCode === 83)
+                            ) {
+                                e.preventDefault();
+                                showToast('Công cụ phát triển và lưu mã nguồn đã bị vô hiệu hóa!', 2000);
+                                return false;
+                            }
+                        });
+                        window.addEventListener('beforeunload', function(e) {
+                            e.preventDefault();
+                            e.returnValue = '';
+                            return '';
+                        });
+                        window.addEventListener('message', function(event) {
+                            if (event.data.type === 'initBackground') {
+                                const savedUrl = event.data.url || '';
+                                document.getElementById('backgroundUrl').value = savedUrl;
+                                const preview = document.getElementById('previewImage');
+                                if (savedUrl) {
+                                    preview.src = savedUrl;
+                                    preview.style.display = 'block';
+                                }
+                            }
+                        });
+                        applyTheme();
+                    `;
+                    iframe.srcdoc = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <style>${styleContent}</style>
+                        </head>
+                        <body>
+                            ${htmlContent}
+                            <script>${scriptContent}<\/script>
+                        </body>
+                        </html>
+                    `;
+                } else {
+                    iframe.src = app.url;
+                    iframe.onload = () => {
+                        try {
+                            iframe.contentWindow.postMessage({
+                                type: 'applySecurity',
+                                script: `
+                                    document.addEventListener('contextmenu', function(e) {
+                                        e.preventDefault();
+                                        alert('Chuột phải đã bị vô hiệu hóa!');
+                                        return false;
+                                    });
+                                    document.addEventListener('keydown', function(e) {
+                                        if (
+                                            e.keyCode === 123 || 
+                                            (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
+                                            (e.ctrlKey && e.keyCode === 85) || 
+                                            (e.ctrlKey && e.keyCode === 83)
+                                        ) {
+                                            e.preventDefault();
+                                            alert('Công cụ phát triển và lưu mã nguồn đã bị vô hiệu hóa!');
+                                            return false;
+                                        }
+                                    });
+                                    window.addEventListener('beforeunload', function(e) {
+                                        e.preventDefault();
+                                        e.returnValue = '';
+                                        return '';
+                                    });
+                                `
+                            }, '*');
+                        } catch (error) {
+                            console.warn(`Không thể áp dụng bảo mật cho iframe ${appName}: ${error.message}`);
+                        }
+                    };
+                }
+
+                iframe.onerror = () => {
+                    document.getElementById('errorMessage').textContent = `Không thể tải ứng dụng ${app.name}. Nhấn "Thử lại" hoặc kiểm tra kết nối.`;
+                    document.getElementById('errorMessage').style.display = 'block';
+                    const retryButton = document.createElement('button');
+                    retryButton.className = 'retry-button';
+                    retryButton.textContent = 'Thử lại';
+                    retryButton.onclick = () => {
+                        iframe.src = iframe.src;
+                        retryButton.style.display = 'none';
+                        document.getElementById('errorMessage').style.display = 'none';
+                    };
+                    document.getElementById('cloudScreen').appendChild(retryButton);
+                    retryButton.style.display = 'block';
+                };
+
+                iframeContainer.appendChild(iframe);
+                iframes[appName] = iframe;
+            });
+
+            return true;
+        } catch (error) {
+            document.getElementById('errorMessage').textContent = "Lỗi tải ứng dụng: " + error.message;
+            document.getElementById('errorMessage').style.display = 'block';
+            return true;
+        }
+    }
+
+    async function loadApps() {
+        const cloudScreen = document.getElementById('cloudScreen');
+        const errorMessage = document.getElementById('errorMessage');
+        const koLoiAppsContainer = document.getElementById('koLoiApps');
+        const loiAppsContainer = document.getElementById('loiApps');
+
+        try {
+            const koLoiFolder = document.createElement('div');
+            koLoiFolder.className = 'app-icon';
+            koLoiFolder.style.setProperty('--index', 0);
+            koLoiFolder.innerHTML = `
+                <img src="https://cdn-icons-png.flaticon.com/128/716/716875.png" alt="Folder">
+                <span>ko lỗi app</span>
+            `;
+            koLoiFolder.onclick = () => openFolder('koLoiModal');
+            cloudScreen.appendChild(koLoiFolder);
+
+            const loiFolder = document.createElement('div');
+            loiFolder.className = 'app-icon';
+            loiFolder.style.setProperty('--index', 1);
+            loiFolder.innerHTML = `
+                <img src="https://cdn-icons-png.flaticon.com/128/716/716875.png" alt="Folder">
+                <span>lỗi app</span>
+            `;
+            loiFolder.onclick = () => openFolder('loiModal');
+            cloudScreen.appendChild(loiFolder);
+
+            const settingApp = document.createElement('div');
+            settingApp.className = 'app-icon';
+            settingApp.style.setProperty('--index', 2);
+            settingApp.innerHTML = `
+                <img src="https://cdn-icons-png.flaticon.com/128/484/484562.png" alt="Setting">
+                <span>Setting</span>
+            `;
+            settingApp.onclick = () => openIframe('setting');
+            cloudScreen.appendChild(settingApp);
+
+            noVpnApps.forEach((app, index) => {
+                const appName = app.name.toLowerCase().trim();
+                if (iframes[appName]) {
+                    const appDiv = document.createElement('div');
+                    appDiv.className = 'app-icon';
+                    appDiv.style.setProperty('--index', index + 3);
+                    appDiv.innerHTML = `
+                        <img src="https://cdn-icons-png.flaticon.com/128/149/149452.png" alt="${app.name}">
+                        <span>${app.name}</span>
+                    `;
+                    appDiv.onclick = () => {
+                        closeFolder('koLoiModal');
+                        openIframe(appName);
+                    };
+                    koLoiAppsContainer.appendChild(appDiv);
+                }
+            });
+
+            needVpnApps.forEach((app, index) => {
+                const appName = app.name.toLowerCase().trim();
+                if (iframes[appName]) {
+                    const appDiv = document.createElement('div');
+                    appDiv.className = 'app-icon';
+                    appDiv.style.setProperty('--index', index + 3 + noVpnApps.length);
+                    appDiv.innerHTML = `
+                        <img src="https://cdn-icons-png.flaticon.com/128/149/149452.png" alt="${app.name}">
+                        <span>${app.name}</span>
+                    `;
+                    appDiv.onclick = () => {
+                        closeFolder('loiModal');
+                        openIframe(appName);
+                    };
+                    loiAppsContainer.appendChild(appDiv);
+                }
+            });
+
+            if (!noVpnApps.length && !needVpnApps.length) {
+                errorMessage.textContent = "Không có ứng dụng nào để hiển thị!";
+                errorMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+            }
+        } catch (error) {
+            errorMessage.textContent = "Lỗi tải ứng dụng: " + error.message;
+            errorMessage.style.display = 'block';
+        }
+    }
+
+    function openFolder(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('active');
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    closeFolder(modalId);
+                }
+            };
+        }
+    }
+
+    function closeFolder(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('active');
+            modal.onclick = null;
+        }
+    }
+
+    function openIframe(appName) {
+        if (currentIframe) {
+            currentIframe.classList.remove('active');
+            currentIframe.style.display = 'none';
+        }
+
+        const iframe = iframes[appName];
+        if (iframe) {
+            iframe.style.opacity = '0';
+            iframe.style.display = 'block';
+            setTimeout(() => {
+                iframe.classList.add('active');
+                iframe.style.opacity = '1';
+                currentIframe = iframe;
+            }, 10);
+
+            try {
+                iframe.contentWindow.postMessage({ type: 'lockNavigation' }, '*');
+                iframe.contentWindow.postMessage({ type: 'requestSecurity', appName: appName }, '*');
+                if (appName === 'setting') {
+                    const savedUrl = localStorage.getItem('backgroundUrl') || '';
+                    iframe.contentWindow.postMessage({ type: 'initBackground', url: savedUrl }, '*');
+                }
+            } catch (error) {
+                console.warn(`Không thể gửi tin nhắn tới iframe ${appName}: ${error.message}`);
+            }
+        } else {
+            document.getElementById('errorMessage').textContent = `Không thể mở ứng dụng ${appName}. Nhấn "Thử lại" hoặc liên hệ hỗ trợ.`;
+            document.getElementById('errorMessage').style.display = 'block';
+            const retryButton = document.createElement('button');
+            retryButton.className = 'retry-button';
+            retryButton.textContent = 'Thử lại';
+            retryButton.onclick = () => {
+                initializeIframes().then(() => loadApps()).then(() => openIframe(appName));
+                retryButton.style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'none';
+            };
+            document.getElementById('cloudScreen').appendChild(retryButton);
+            retryButton.style.display = 'block';
+        }
+    }
+
+    function closeIframe() {
+        if (currentIframe) {
+            currentIframe.classList.remove('active');
+            currentIframe.style.display = 'none';
+            currentIframe = null;
+        }
+    }
+
+    function reloadIframe() {
+        if (currentIframe) {
+            if (currentIframe.srcdoc) {
+                const temp = currentIframe.srcdoc;
+                currentIframe.srcdoc = '';
+                setTimeout(() => currentIframe.srcdoc = temp, 10);
+            } else if (currentIframe.src) {
+                const tempSrc = currentIframe.src;
+                currentIframe.src = '';
+                setTimeout(() => currentIframe.src = tempSrc, 10);
+            }
+        }
+    }
+
+    async function initializeCloud() {
+        try {
+            const startTime = performance.now();
+            await initializeIframes();
+            await loadApps();
+            initializationComplete = true;
+            const savedBackground = localStorage.getItem('backgroundUrl');
+            if (savedBackground) {
+                document.querySelector('.cloud-container').style.background = `url("${savedBackground}") no-repeat center center`;
+                document.querySelector('.cloud-container').style.backgroundSize = 'cover';
+            }
+        } catch (error) {
+            document.getElementById('errorMessage').textContent = "Lỗi khởi tạo Cloud: " + error.message;
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+    }
+
+    function handleMessage(event) {
+        if (event.data.type === 'lockNavigation') {
+            const iframe = event.source.frameElement.contentWindow;
+            iframe.addEventListener('beforeunload', function(e) {
+                if (!iframe.location.reload) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            iframe.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        } else if (event.data.type === 'changeBackground') {
+            const url = event.data.url;
+            if (url) {
+                const cloudContainer = document.querySelector('.cloud-container');
+                cloudContainer.style.background = `url("${url}") no-repeat center center`;
+                cloudContainer.style.backgroundSize = 'cover';
+                localStorage.setItem('backgroundUrl', url);
+            }
+        } else if (event.data.type === 'closeIframe') {
+            closeIframe();
+        } else if (event.data.type === 'applySecurity') {
+            try {
+                const iframe = event.source.frameElement;
+                const script = document.createElement('script');
+                script.textContent = event.data.script;
+                iframe.contentDocument.body.appendChild(script);
+            } catch (error) {
+                console.warn(`Không thể áp dụng script bảo mật: ${error.message}`);
+            }
+        }
+    }
+
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'requestSecurity') {
+            const iframe = iframes[event.data.appName];
+            if (iframe) {
+                try {
+                    iframe.contentWindow.postMessage({
+                        type: 'applySecurity',
+                        script: `
+                            document.addEventListener('contextmenu', function(e) {
+                                e.preventDefault();
+                                alert('Chuột phải đã bị vô hiệu hóa!');
+                                return false;
+                            });
+                            document.addEventListener('keydown', function(e) {
+                                if (
+                                    e.keyCode === 123 || 
+                                    (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
+                                    (e.ctrlKey && e.keyCode === 85) || 
+                                    (e.ctrlKey && e.keyCode === 83)
+                                ) {
+                                    e.preventDefault();
+                                    alert('Công cụ phát triển và lưu mã nguồn đã bị vô hiệu hóa!');
+                                    return false;
+                                }
+                            });
+                            window.addEventListener('beforeunload', function(e) {
+                                e.preventDefault();
+                                e.returnValue = '';
+                                return '';
+                            });
+                        `
+                    }, '*');
+                } catch (error) {
+                    console.warn(`Không thể gửi script bảo mật cho iframe ${event.data.appName}: ${error.message}`);
+                }
+            }
+        } else {
+            handleMessage(event);
+        }
+    });
+
+    window.onload = () => {
+        validateNavigation();
+        if (window.location.hash === '#creating') {
+            currentSection = 'creating';
+            validateNavigation();
+            initializeCloud().then(() => {
+                navigateTo('cloud');
+            });
+        }
+    };
+
+    window.addEventListener('hashchange', async () => {
+        currentSection = window.location.hash.replace('#', '') || 'home';
+        validateNavigation();
+
+        if (currentSection === 'creating') {
+            await initializeCloud();
+            navigateTo('cloud');
+        }
+    });
+
+    function base64_decode(encoded) {
+        return atob(encoded);
+    }
+</script>
 </body>
 </html>
