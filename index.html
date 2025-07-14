@@ -1,1501 +1,304 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#000000">
-    <meta name="description" content="Trải nghiệm Sigma Cloud không giới hạn!">
-    <title>Sigma Cloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bypass YeuMoney</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #fff;
             min-height: 100vh;
-            overflow-x: hidden;
+            transition: background 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
-
-        .section {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+        .light {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
         }
-
-        .section.active {
-            display: flex;
-            opacity: 1;
+        .dark {
+            background: linear-gradient(135deg, #0b0f19, #1f2937);
         }
-
-        .home-section {
-            flex-direction: column;
-            background: #ffd1dc;
-        }
-        .home-navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: #333;
-            display: flex;
-            justify-content: center;
-            padding: 15px 0;
-            z-index: 10;
-            animation: slideDown 0.5s ease-out;
-        }
-        @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .home-navbar a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 18px;
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 25px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .home-navbar a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-        .home-navbar a.active {
-            background-color: #ff4081;
-            color: #fff;
-        }
-        .home-content {
-            margin-top: 70px;
-            padding: 20px;
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .home-tab-content {
-            display: none;
-            width: 100%;
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            transform: translateY(20px);
-        }
-        .home-tab-content.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-            animation: fadeInUp 0.5s ease-out;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .home-tab {
-            background: transparent;
-            padding: 30px;
-            text-align: center;
-        }
-        .home-tab img {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-        .home-tab img:hover {
-            transform: scale(1.1);
-        }
-        .home-tab h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .home-tab p {
-            font-size: 16px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .home-tab button.get-cloud {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 25px;
-            background-color: #ff4500;
-            color: white;
-            font-weight: 700;
-            font-size: 18px;
-            cursor: pointer;
+        .card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .home-tab button.get-cloud:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.5);
-        }
-
-        .me-tab {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        .me-tab img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-        .me-tab img:hover {
-            transform: scale(1.1);
-        }
-        .me-tab h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #ff4081;
-        }
-        .me-tab p {
-            font-size: 16px;
-            margin-bottom: 20px;
-            color: #ddd;
-        }
-        .me-tab .button-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .me-tab button {
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .me-tab button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .me-tab button.discord-sigmadev {
-            background-color: #7289da;
-            color: white;
-        }
-        .me-tab button.youtube {
-            background-color: #ff0000;
-            color: white;
-        }
-        .me-tab button.cach-xai {
-            background-color: #00cc00;
-            color: white;
-        }
-        .me-tab button.discord-turbolite {
-            background-color: #a300a3;
-            color: white;
-        }
-
-        .creating-section {
-            flex-direction: column;
-        }
-        .creating-container {
-            text-align: center;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-        .creating-spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #ff4081;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .creating-message {
-            font-size: 20px;
-            margin-top: 20px;
-        }
-
-        .cloud-section {
-            flex-direction: column;
-            background: #000;
-        }
-        .cloud-container {
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(145deg, #1a1a1a, #2c2c2c);
-            position: relative;
-            overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            animation: fadeIn 0.5s ease-out;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .progress-bar {
+            transition: width 1s linear;
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .cloud-status-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 30px;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.9), rgba(50, 50, 50, 0.9));
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 15px;
-            font-size: 12px;
-            color: #fff;
-            animation: slideIn 0.5s ease-out;
+        .custom-btn {
+            transition: all 0.3s ease;
+            transform: scale(1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
-        @keyframes slideIn {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .custom-btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 12px rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
         }
-        .cloud-status-bar .left {
-            display: flex;
-            gap: 10px;
+        .theme-btn {
+            background: #3b82f6;
         }
-        .cloud-status-bar .right {
-            display: flex;
-            gap: 10px;
+        .theme-btn:hover {
+            background: #1d4ed8;
         }
-        .cloud-status-bar .right img {
-            width: 16px;
-            height: 16px;
-            filter: invert(100%);
-            transition: transform 0.3s ease;
+        .dark .theme-btn {
+            background: #60a5fa;
         }
-        .cloud-status-bar .right img:hover {
-            transform: rotate(360deg);
+        .dark .theme-btn:hover {
+            background: #3b82f6;
         }
-        .cloud-screen {
-            width: 100%;
-            height: calc(100% - 30px);
-            position: relative;
-            top: 30px;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 20px;
-            overflow-y: auto;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            animation: slideUp 0.5s ease-out;
+        .discord-btn {
+            background: linear-gradient(90deg, #6366f1, #a78bfa);
         }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .discord-btn:hover {
+            background: linear-gradient(90deg, #4f46e5, #8b5cf6);
         }
-        .app-icon {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
-            opacity: 0;
-            animation: fadeInApp 0.5s ease forwards;
-            animation-delay: calc(var(--index) * 0.1s);
+        .start-btn {
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6);
         }
-        @keyframes fadeInApp {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+        .start-btn:hover {
+            background: linear-gradient(90deg, #0891b2, #7c3aed);
         }
-        .app-icon:hover {
-            transform: scale(1.15);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
-        }
-        .app-icon:active {
-            transform: scale(0.95);
-        }
-        .app-icon img {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: border-color 0.3s ease;
-        }
-        .app-icon:hover img {
-            border-color: #ff4081;
-        }
-        .app-icon span {
-            color: #fff;
-            font-size: 12px;
-            text-align: center;
-            margin-top: 5px;
-            word-wrap: break-word;
-            max-width: 80px;
-            text-shadow: 1px 1px 3px #000;
-        }
-        .folder-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            animation: fadeInModal 0.3s ease;
-        }
-        @keyframes fadeInModal {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .folder-modal.active {
-            display: flex;
-        }
-        .folder-content {
+        .copy-btn {
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 30px;
-            width: 90%;
-            max-width: 700px;
-            max-height: 90%;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            animation: popUp 0.3s ease;
         }
-        @keyframes popUp {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
         }
-        .folder-content h3 {
-            font-size: 22px;
-            color: #ff4081;
-            margin-bottom: 20px;
-            text-align: center;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        .dark .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
         }
-        .folder-content .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            gap: 15px;
-        }
-        .iframe-container {
-            position: absolute;
-            top: 30px;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 30px);
-            display: none;
-            background: #000;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-            animation: fadeInIframe 0.5s ease-out;
-        }
-        @keyframes fadeInIframe {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .iframe-container.active {
-            display: block;
-            opacity: 1;
-        }
-        .iframe-container iframe {
-            width: 100%;
-            height: 100yanimation: fadeInIframe 0.5s ease-out;
-        }
-        .control-buttons {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            z-index: 20;
-            animation: slideUpButtons 0.5s ease-out;
-        }
-        @keyframes slideUpButtons {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .control-buttons button {
+        .dark .copy-btn:hover {
             background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .control-buttons button img {
-            width: 24px;
-            height: 24px;
-            filter: invert(100%);
-        }
-        .control-buttons button:hover {
-            transform: scale(1.1);
-            background-color: rgba(255, 255, 255, 0.4);
-        }
-        .settings-app {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100%;
-            background: #1a1a1a;
-            padding: 15px;
-            overflow-y: auto;
-        }
-        .settings-app h3 {
-            color: #ff4081;
-            margin-bottom: 15px;
-        }
-        .settings-app label {
-            color: #fff;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .settings-app input, .settings-app select {
-            width: 80%;
-            max-width: 300px;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: #333;
-            color: #fff;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
-        .settings-app input:focus, .settings-app select:focus {
-            outline: none;
-            border-color: #ff4081;
-            box-shadow: 0 0 5px rgba(255, 64, 129, 0.5);
-        }
-        .settings-app .preview-image {
-            max-width: 100%;
-            max-height: 150px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            display: none;
-        }
-        .settings-app .preset-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-            gap: 8px;
-            margin: 10px 0;
-        }
-        .settings-app .preset-buttons button {
-            padding: 6px;
-            background: #ff4081;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .settings-app .preset-buttons button:hover {
-            background: #e91e63;
-        }
-        .settings-app .button-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .settings-app button {
-            padding: 8px 15px;
-            background: #ff4081;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
-        .settings-app button:hover {
-            background: #e91e63;
-            transform: scale(1.05);
-        }
-        .settings-app button.secondary {
-            background: #7289da;
-        }
-        .settings-app button.secondary:hover {
-            background: #5b6eae;
-        }
-        .settings-app .toast {
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 1000;
-        }
-        .settings-app .toast.show {
-            opacity: 1;
-        }
-
-        .error-message {
-            color: #ff0000;
-            font-size: 14px;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .retry-button {
-            padding: 8px 16px;
-            background: #ff4081;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            display: none;
-        }
-        .retry-button:hover {
-            background: #e91e63;
-        }
-
-        @media (max-width: 1024px) and (min-width: 601px) {
-            .cloud-container {
-                width: 95%;
-                height: 90vh;
-                background: url('https://png.pngtree.com/background/20250104/original/pngtree-free-hd-wallpaper-4k-new-background-picture-image_15546678.jpg') no-repeat center center;
-                background-size: cover;
-                border-radius: 15px;
-                animation: scaleIn 0.5s ease-out;
-            }
-            @keyframes scaleIn {
-                from { transform: scale(0.9); opacity: 0; }
-                to { transform: scale(1); opacity: 1; }
-            }
-            .cloud-screen {
-                height: calc(100% - 30px);
-                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-                padding: 15px;
-            }
-            .app-icon {
-                width: 90px;
-                height: 90px;
-            }
-            .app-icon img {
-                width: 70px;
-                height: 70px;
-            }
-            .iframe-container {
-                height: calc(100% - 30px);
-                border-radius: 15px;
-            }
-            .control-buttons {
-                z-index: 20;
-                gap: 20px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .home-navbar a {
-                font-size: 16px;
-                padding: 8px 15px;
-            }
-            .home-tab {
-                padding: 20px;
-            }
-            .app-icon {
-                width: 70px;
-                height: 70px;
-            }
-            .app-icon img {
-                width: 50px;
-                height: 50px;
-            }
-            .folder-content {
-                max-width: 90%;
-                padding: 20px;
-            }
-            .folder-content h3 {
-                font-size: 18px;
-            }
-            .folder-content .app-grid {
-                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-                gap: 10px;
-            }
-            .cloud-container {
-                width: 95%;
-                height: 85vh;
-            }
-            .iframe-container {
-                height: calc(100% - 30px);
-            }
-            .settings-app {
-                margin: 8px;
-                padding: 10px;
-            }
-            .settings-app h3 {
-                font-size: 20px;
-            }
-            .settings-app .settings-section {
-                max-width: 100%;
-            }
         }
     </style>
 </head>
-<body oncontextmenu="return false;">
-    <div id="home" class="section home-section active">
-        <div class="home-navbar">
-            <a href="#home-tab" class="tab-link active" onclick="switchTab(event, 'home-tab')">Home</a>
-            <a href="#me-tab" class="tab-link" onclick="switchTab(event, 'me-tab')">Me</a>
-        </div>
-        <div class="home-content">
-            <div id="home-tab" class="home-tab-content home-tab active">
-                <img src="https://cdn-icons-png.flaticon.com/128/149/149452.png" alt="Logo">
-                <h1>Welcome User to Sigma Cloud</h1>
-                <p>Web developed by SigmaDev with Grok AI</p>
-                <button class="get-cloud" onclick="navigateTo('creating')">Get Cloud</button>
-            </div>
-            <div id="me-tab" class="home-tab-content me-tab">
-                <img src="https://cdn-icons-png.flaticon.com/128/149/149452.png" alt="Logo">
-                <h1>Sigma User</h1>
-                <p>ID: ai mà biết được</p>
-                <button onclick="window.location.hash='welfare'">Welfare Center <span style="color: #00b0ff;">💎 999999</span></button>
-                <p>Ứng dụng được phát triển bởi SigmaDev, code với Grok AI, link now.gg từ Turbo Lite STBID</p>
-                <div class="button-grid">
-                    <button class="discord-sigmadev" onclick="window.open(base64_decode('aHR0cHM6Ly9kaXNjb3JkLmdnL2ZLM0JaV3R4Q0E='), '_blank')">Discord SigmaDev</button>
-                    <button class="youtube" onclick="window.open(base64_decode('aHR0cHM6Ly93d3cueW91dHViZS5jb20vQGR1Y3RyZW55dA=='), '_blank')">YouTube</button>
-                    <button class="cach-xai" onclick="window.open(base64_decode('aHR0cHM6Ly93d3cudHVyYm9saXRlLmFzaWEvMjAyNS8wNC91Z3Bob25lLWNhY2gtbGF5LWtleS5odG1sP209MQ=='), '_blank')">Cách xài</button>
-                    <button class="discord-turbolite" onclick="window.open(base64_decode('aHR0cHM6Ly9kaXNjb3JkLmdnL0JHWndzZDYzR3U='), '_blank')">Discord turbolite</button>
-                </div>
+<body class="font-sans text-gray-100 light">
+    <div class="container mx-auto p-4 max-w-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-extrabold text-cyan-200 drop-shadow-lg">
+                <i class="fas fa-rocket mr-2"></i> Bypass YeuMoney
+            </h1>
+            <div class="flex space-x-2">
+                <button id="themeToggle" class="custom-btn theme-btn text-white font-extrabold py-1.5 px-3 rounded-lg flex items-center">
+                    <i class="fas fa-moon mr-2"></i> Chế độ tối
+                </button>
+                <a href="https://discord.gg/2NpBPjM4PF" target="_blank" class="custom-btn discord-btn text-white font-extrabold py-1.5 px-3 rounded-lg flex items-center">
+                    <i class="fab fa-discord mr-2"></i> Join Discord
+                </a>
             </div>
         </div>
-    </div>
-
-    <div id="creating" class="section creating-section">
-        <div class="creating-container">
-            <div class="creating-spinner"></div>
-            <p class="creating-message">Đang khởi tạo Cloud Phone...</p>
+        <div class="bg-transparent rounded-lg shadow-lg p-4 mb-4 card">
+            <h2 class="text-xl font-extrabold text-cyan-200 mb-3">Chọn Nghiệm Vụ</h2>
+            <div id="siteCheckboxes" class="grid grid-cols-2 gap-2 mb-4"></div>
+            <button id="startBypass" class="custom-btn start-btn w-full text-white font-extrabold py-2.5 px-4 rounded-lg transition-all">
+                Start Bypass
+            </button>
         </div>
-    </div>
-
-    <div id="cloud" class="section cloud-section">
-        <div class="cloud-container">
-            <div class="cloud-status-bar">
-                <div class="left">
-                    <span id="currentTime"></span>
-                    <span>5G</span>
-                </div>
-                <div class="right">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/wifi.png" alt="WiFi">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/battery-level.png" alt="Battery">
-                </div>
-            </div>
-            <div class="cloud-screen" id="cloudScreen">
-                <div id="errorMessage" class="error-message" style="display: none;"></div>
-            </div>
-            <div id="iframeContainer"></div>
-            <div class="control-buttons">
-                <button onclick="closeIframe()"><img src="https://cdn-icons-png.flaticon.com/128/11502/11502447.png" alt="Square"></button>
-                <button onclick="closeIframe()"><img src="https://cdn-icons-png.flaticon.com/128/5720/5720434.png" alt="Circle"></button>
-                <button onclick="reloadIframe()"><img src="https://cdn-icons-png.flaticon.com/128/7710/7710436.png" alt="Triangle"></button>
-            </div>
-        </div>
-        <div id="koLoiModal" class="folder-modal">
-            <div class="folder-content">
-                <h3>ko lỗi app</h3>
-                <div class="app-grid" id="koLoiApps"></div>
-            </div>
-        </div>
-        <div id="loiModal" class="folder-modal">
-            <div class="folder-content">
-                <h3>lỗi app</h3>
-                <div class="app-grid" id="loiApps"></div>
-            </div>
-        </div>
+        <div id="status" class="text-cyan-200 text-base font-bold mb-3 text-center"></div>
+        <div id="results" class="space-y-3"></div>
     </div>
 
     <script>
-    document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 83) || (e.ctrlKey && e.keyCode == 85)) {
-            e.preventDefault();
-            return false;
-        }
-    });
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
+        document.addEventListener('keydown', (e) => {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                (e.ctrlKey && e.key === 'U')
+            ) {
+                e.preventDefault();
+            }
+        });
 
-    (function() {
-        const threshold = 160;
-        setInterval(function() {
-            if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+        const devToolsDetector = () => {
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth;
+            const heightDiff = window.outerHeight - window.innerHeight;
+            if (widthDiff > threshold || heightDiff > threshold) {
+                alert('Vui lòng đóng DevTools để tiếp tục sử dụng!');
                 window.location.reload();
             }
-        }, 1000);
-    })();
+        };
 
-    function updateTime() {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const displayHours = hours % 12 || 12;
-        document.getElementById('currentTime').textContent = `${displayHours}:${minutes} ${ampm}`;
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
+        setInterval(devToolsDetector, 1000);
 
-    let previousSection = 'home';
-    let currentSection = window.location.hash.replace('#', '') || 'home';
-    let initializationComplete = false;
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1380090512492728361/rlm3jJOs5eCGUXZAoqOpzIKAjuypOQbnVN8Jnzhb59FQvPVdEz1WnZbT16_ptuRPs7CE';
 
-    function navigateTo(section) {
-        previousSection = currentSection;
-        currentSection = section;
-        window.location.hash = section;
-        showSection(section);
-    }
+        const urls = {
+            "m88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://bet88ec.com/cach-danh-bai-sam-loc&loai_traffic=https://bet88ec.com/&clk=1000" },
+            "fb88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://fb88mg.com/ty-le-cuoc-hong-kong-la-gi&loai_traffic=https://fb88mg.com/&clk=1000" },
+            "188bet": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrailamnhe&url=https://88betag.com/cach-choi-game-bai-pok-deng&loai_traffic=https://88betag.com/&clk=1000" },
+            "w88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://188.166.185.213/tim-hieu-khai-niem-3-bet-trong-poker-la-gi&loai_traffic=https://188.166.185.213/&clk=1000" },
+            "v9bet": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://v9betse.com/ca-cuoc-dua-cho&loai_traffic=https://v9betse.com/&clk=1000" },
+            "vn88": { url: "https://traffic-user.net/GET_MA.php?codexn=bomaydeptrai&url=https://vn88no.com/keo-chap-1-trai-la-gi&loai_traffic=https://vn88no.com/&clk=1000" },
+            "bk8": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://bk8ze.com/cach-choi-bai-catte&loai_traffic=https://bk8ze.com/&clk=1000" },
+        };
 
-    function checkKeyStatus() {
-        return true;
-    }
+        const startButton = document.getElementById('startBypass');
+        const statusDiv = document.getElementById('status');
+        const resultsDiv = document.getElementById('results');
+        const siteCheckboxesDiv = document.getElementById('siteCheckboxes');
+        const themeToggle = document.getElementById('themeToggle');
 
-    function showSection(sectionId) {
-        const sections = document.querySelectorAll('.section');
-        sections.forEach(section => section.classList.remove('active'));
+        let bypassCount = parseInt(localStorage.getItem('bypassCount')) || 0;
 
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection) {
-            targetSection.classList.add('active');
-
-            if (sectionId === 'cloud') {
-                window.onbeforeunload = () => 'Bạn có chắc chắn muốn thoát? Dữ liệu có thể bị mất!';
-            } else {
-                window.onbeforeunload = null;
-            }
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.remove('light');
+            document.body.classList.add('dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun mr-2"></i> Chế độ sáng';
         }
-    }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light');
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun mr-2"></i> Chế độ sáng' : '<i class="fas fa-moon mr-2"></i> Chế độ tối';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
 
-    function validateNavigation() {
-        if (currentSection === 'home-tab' || currentSection === 'me-tab') {
-            currentSection = 'home';
-        }
-
-        if (currentSection === 'creating' && previousSection !== 'home') {
-            navigateTo('home');
-            return;
-        }
-
-        if (currentSection === 'cloud' && previousSection !== 'creating') {
-            navigateTo('home');
-            return;
-        }
-
-        showSection(currentSection);
-    }
-
-    function switchTab(event, tabId) {
-        event.preventDefault();
-        const tabs = document.querySelectorAll('.home-tab-content');
-        const tabLinks = document.querySelectorAll('.tab-link');
-
-        tabs.forEach(tab => tab.classList.remove('active'));
-        tabLinks.forEach(link => link.classList.remove('active'));
-
-        const targetTab = document.getElementById(tabId);
-        if (targetTab) targetTab.classList.add('active');
-
-        const activeLink = document.querySelector(`.tab-link[href="#${tabId}"]`);
-        if (activeLink) activeLink.classList.add('active');
-
-        navigateTo(tabId);
-    }
-
-    const iframes = {};
-    let currentIframe = null;
-    let noVpnApps = [];
-    let need:VpnApps = [];
-
-    async function initializeIframes() {
-        const iframeContainer = document.getElementById('iframeContainer');
-
-        try {
-            let data;
-            try {
-                const response = await fetch(base64_decode('aHR0cHM6Ly9wYXN0ZWZ5LmFwcC9HekliYTNycC9yYXc='), { signal: AbortSignal.timeout(10000) });
-                if (!response.ok) {
-                    throw new Error(`Lỗi tải danh sách ứng dụng: ${response.status} ${response.statusText}`);
-                }
-                data = await response.json();
-            } catch (error) {
-                data = {
-                    noVpnApps: [
-                        { name: "bearx", url: "https://uproxy.online/ultraviolet/bearx" },
-                        { name: "scarlet girl", url: "https://uproxy.online/ultraviolet/scarlet" }
-                    ],
-                    needVpnApps: [
-                        { name: "terrarum", url: "https://uproxy.online/ultraviolet/terrarum" }
-                    ]
-                };
-                document.getElementById('errorMessage').textContent = "Lỗi tải danh sách ứng dụng, sử dụng danh sách mặc định.";
-                document.getElementById('errorMessage').style.display = 'block';
-            }
-
-            noVpnApps = (data.noVpnApps || []).filter(app => app.name && app.url && app.url.startsWith('http'));
-            needVpnApps = (data.needVpnApps || []).filter(app => app.name && app.url && app.url.startsWith('http'));
-            const allApps = [...noVpnApps, ...needVpnApps, { name: "Setting", url: "" }];
-
-            if (!allApps.length) {
-                throw new Error('Không có ứng dụng nào để khởi tạo iframe');
-            }
-
-            allApps.forEach(app => {
-                const iframe = document.createElement('iframe');
-                const appName = app.name.toLowerCase().trim();
-                iframe.className = 'iframe-container';
-                iframe.id = `iframe-${appName.replace(/\s/g, '-')}`;
-                iframe.style.display = 'none';
-                iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
-                iframe.setAttribute('attributionsrc', '');
-                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-
-                if (app.name === "Setting") {
-                    const styleContent = `
-                        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-                        body {
-                            margin: 0;
-                            height: 100%;
-                            overflow: hidden;
-                            background: linear-gradient(135deg, #1e3c72, #2a5298);
-                            color: #fff;
-                            font-family: 'Roboto', sans-serif;
-                            display: flex;
-                            flex-direction: column;
-                        }
-                        .settings-app {
-                            flex: 1;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: flex-start;
-                            padding: 15px;
-                            background: rgba(255, 255, 255, 0.1);
-                            backdrop-filter: blur(10px);
-                            border-radius: 10px;
-                            margin: 15px;
-                            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
-                            overflow-y: auto;
-                        }
-                        .settings-app h3 {
-                            color: #ff4081;
-                            font-size: 24px;
-                            margin-bottom: 15px;
-                            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-                        }
-                        .settings-section {
-                            width: 100%;
-                            max-width: 300px;
-                            margin-bottom: 15px;
-                        }
-                        .settings-section label {
-                            display: block;
-                            font-size: 14px;
-                            margin-bottom: 6px;
-                            color: #ddd;
-                        }
-                        .settings-section input, .settings-section select {
-                            width: 100%;
-                            padding: 8px;
-                            border: 1px solid #ccc;
-                            border-radius: 5px;
-                            background: #333;
-                            color: #fff;
-                            font-size: 12px;
-                        }
-                        .settings-section input:focus, .settings-section select:focus {
-                            outline: none;
-                            border-color: #ff4081;
-                            box-shadow: 0 0 5px rgba(255, 64, 129, 0.5);
-                        }
-                        .preview-image {
-                            max-width: 100%;
-                            max-height: 150px;
-                            margin: 8px 0;
-                            border: 1px solid #ccc;
-                            border-radius: 5px;
-                            display: none;
-                        }
-                        .button-group {
-                            display: flex;
-                            gap: 8px;
-                            justify-content: center;
-                        }
-                        button {
-                            padding: 8px 15px;
-                            background: #ff4081;
-                            color: #fff;
-                            border: none;
-                            border-radius: 5px;
-                            cursor: pointer;
-                            font-weight: 700;
-                            transition: background 0.3s, transform 0.2s;
-                        }
-                        button:hover {
-                            background: #e91e63;
-                            transform: scale(1.05);
-                        }
-                        button.secondary {
-                            background: #7289da;
-                        }
-                        button.secondary:hover {
-                            background: #5b6eae;
-                        }
-                        .preset-buttons {
-                            display: grid;
-                            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-                            gap: 8px;
-                            margin-top: 8px;
-                        }
-                        .preset-buttons button {
-                            padding: 5px;
-                            font-size: 10px;
-                        }
-                        .toast {
-                            position: fixed;
-                            bottom: 15px;
-                            left: 50%;
-                            transform: translateX(-50%);
-                            background: #333;
-                            color: #fff;
-                            padding: 8px 15px;
-                            border-radius: 5px;
-                            opacity: 0;
-                            transition: opacity 0.3s;
-                            z-index: 1000;
-                        }
-                        .toast.show {
-                            opacity: 1;
-                        }
-                        @media (max-width: 600px) {
-                            .settings-app {
-                                margin: 8px;
-                                padding: 10px;
-                            }
-                            .settings-app h3 {
-                                font-size: 20px;
-                            }
-                            .settings-section {
-                                max-width: 100%;
-                            }
-                        }
-                    `;
-                    const htmlContent = `
-                        <div class="settings-app">
-                            <h3>Sigma Cloud Settings</h3>
-                            <div class="settings-section">
-                                <label>Chọn Theme</label>
-                                <select id="themeSelect" onchange="applyTheme()">
-                                    <option value="dark">Tối</option>
-                                    <option value="light">Sáng</option>
-                                </select>
-                            </div>
-                            <div class="settings-section">
-                                <label>Thay đổi ảnh nền (Nhập URL)</label>
-                                <input type="text" id="backgroundUrl" placeholder="Nhập URL ảnh" oninput="previewImage()">
-                                <img id="previewImage" class="preview-image">
-                                <div class="preset-buttons">
-                                    <button onclick="setPreset(base64_decode('aHR0cHM6Ly9waWMuYnN0YXJzdGF0aWMuY29tL3VnYy82YjEyNmQ4ZjM1YzA5MzY0OWQyYzI4MTEwYTExZTY3Ny5qcGc='))">Preset 1</button>
-                                    <button onclick="setPreset(base64_decode('aHR0cHM6Ly91cy10dW5hLXNvdW5kcy1pbWFnZXMudm9pY2Vtb2QubmV0L2M2ZjNmYjMwLWU3ZWQtNDY2Mi04ZDBmLWJiYTIyZTc1ZTcwMC0xNjc2Mjg1NDgyNTg5LmpwZWc='))">Preset 2</button>
-                                    <button onclick="setPreset(base64_decode('aHR0cHM6Ly9vY2FmZS5uZXQvd3AtY29udGVudC91cGxvYWRzLzIwMjQvMTAvYW5oLW5lbi1tYXktdGluaC00ay0xLmpwZw=='))">Preset 3</button>
-                                </div>
-                            </div>
-                            <div class="button-group">
-                                <button onclick="saveBackground()">Lưu</button>
-                                <button class="secondary" onclick="cancelBackground()">Hủy</button>
-                                <button class="secondary" onclick="closeSettings()">Thoát</button>
-                            </div>
-                        </div>
-                        <div id="toast" class="toast"></div>
-                    `;
-                    const scriptContent = `
-                        function showToast(message, duration) {
-                            const toast = document.getElementById('toast');
-                            toast.textContent = message;
-                            toast.classList.add('show');
-                            setTimeout(() => toast.classList.remove('show'), duration);
-                        }
-                        function previewImage() {
-                            const url = document.getElementById('backgroundUrl').value;
-                            const preview = document.getElementById('previewImage');
-                            if (url) {
-                                preview.src = url;
-                                preview.style.display = 'block';
-                                preview.onerror = () => {
-                                    showToast('URL ảnh không hợp lệ!', 3000);
-                                    preview.style.display = 'none';
-                                };
-                            } else {
-                                preview.style.display = 'none';
-                            }
-                        }
-                        function setPreset(url) {
-                            document.getElementById('backgroundUrl').value = url;
-                            previewImage();
-                        }
-                        function saveBackground() {
-                            const url = document.getElementById('backgroundUrl').value;
-                            if (url) {
-                                window.parent.postMessage({ type: 'changeBackground', url: url }, '*');
-                                showToast('Đã lưu ảnh nền!', 2000);
-                            } else {
-                                showToast('Vui lòng nhập URL ảnh!', 2000);
-                            }
-                        }
-                        function cancelBackground() {
-                            const savedUrl = localStorage.getItem('backgroundUrl') || '';
-                            document.getElementById('backgroundUrl').value = savedUrl;
-                            const preview = document.getElementById('previewImage');
-                            if (savedUrl) {
-                                preview.src = savedUrl;
-                                preview.style.display = 'block';
-                            } else {
-                                preview.style.display = 'none';
-                            }
-                            showToast('Đã hủy thay đổi!', 2000);
-                        }
-                        function applyTheme() {
-                            const theme = document.getElementById('themeSelect').value;
-                            document.body.style.background = theme === 'light' 
-                                ? 'linear-gradient(135deg, #f5f7fa, #c3cfe2)' 
-                                : 'linear-gradient(135deg, #1e3c72, #2a5298)';
-                            document.querySelector('.settings-app').style.background = theme === 'light' 
-                                ? 'rgba(255, 255, 255, 0.8)' 
-                                : 'rgba(255, 255, 255, 0.1)';
-                        }
-                        function closeSettings() {
-                            window.parent.postMessage({ type: 'closeIframe' }, '*');
-                        }
-                        document.addEventListener('contextmenu', function(e) {
-                            e.preventDefault();
-                            showToast('Chuột phải đã bị vô hiệu hóa!', 2000);
-                            return false;
-                        });
-                        document.addEventListener('keydown', function(e) {
-                            if (
-                                e.keyCode === 123 || 
-                                (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
-                                (e.ctrlKey && e.keyCode === 85) || 
-                                (e.ctrlKey && e.keyCode === 83)
-                            ) {
-                                e.preventDefault();
-                                showToast('Công cụ phát triển và lưu mã nguồn đã bị vô hiệu hóa!', 2000);
-                                return false;
-                            }
-                        });
-                        window.addEventListener('beforeunload', function(e) {
-                            e.preventDefault();
-                            e.returnValue = '';
-                            return '';
-                        });
-                        window.addEventListener('message', function(event) {
-                            if (event.data.type === 'initBackground') {
-                                const savedUrl = event.data.url || '';
-                                document.getElementById('backgroundUrl').value = savedUrl;
-                                const preview = document.getElementById('previewImage');
-                                if (savedUrl) {
-                                    preview.src = savedUrl;
-                                    preview.style.display = 'block';
-                                }
-                            }
-                        });
-                        applyTheme();
-                    `;
-                    iframe.srcdoc = `
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <style>${styleContent}</style>
-                        </head>
-                        <body>
-                            ${htmlContent}
-                            <script>${scriptContent}<\/script>
-                        </body>
-                        </html>
-                    `;
-                } else {
-                    iframe.src = app.url;
-                    iframe.onload = () => {
-                        try {
-                            iframe.contentWindow.postMessage({
-                                type: 'applySecurity',
-                                script: `
-                                    document.addEventListener('contextmenu', function(e) {
-                                        e.preventDefault();
-                                        alert('Chuột phải đã bị vô hiệu hóa!');
-                                        return false;
-                                    });
-                                    document.addEventListener('keydown', function(e) {
-                                        if (
-                                            e.keyCode === 123 || 
-                                            (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
-                                            (e.ctrlKey && e.keyCode === 85) || 
-                                            (e.ctrlKey && e.keyCode === 83)
-                                        ) {
-                                            e.preventDefault();
-                                            alert('Công cụ phát triển và lưu mã nguồn đã bị vô hiệu hóa!');
-                                            return false;
-                                        }
-                                    });
-                                    window.addEventListener('beforeunload', function(e) {
-                                        e.preventDefault();
-                                        e.returnValue = '';
-                                        return '';
-                                    });
-                                `
-                            }, '*');
-                        } catch (error) {
-                            console.warn(`Không thể áp dụng bảo mật cho iframe ${appName}: ${error.message}`);
-                        }
-                    };
-                }
-
-                iframe.onerror = () => {
-                    document.getElementById('errorMessage').textContent = `Không thể tải ứng dụng ${app.name}. Nhấn "Thử lại" hoặc kiểm tra kết nối.`;
-                    document.getElementById('errorMessage').style.display = 'block';
-                    const retryButton = document.createElement('button');
-                    retryButton.className = 'retry-button';
-                    retryButton.textContent = 'Thử lại';
-                    retryButton.onclick = () => {
-                        iframe.src = iframe.src;
-                        retryButton.style.display = 'none';
-                        document.getElementById('errorMessage').style.display = 'none';
-                    };
-                    document.getElementById('cloudScreen').appendChild(retryButton);
-                    retryButton.style.display = 'block';
-                };
-
-                iframeContainer.appendChild(iframe);
-                iframes[appName] = iframe;
-            });
-
-            return true;
-        } catch (error) {
-            document.getElementById('errorMessage').textContent = "Lỗi tải ứng dụng: " + error.message;
-            document.getElementById('errorMessage').style.display = 'block';
-            return true;
-        }
-    }
-
-    async function loadApps() {
-        const cloudScreen = document.getElementById('cloudScreen');
-        const errorMessage = document.getElementById('errorMessage');
-        const koLoiAppsContainer = document.getElementById('koLoiApps');
-        const loiAppsContainer = document.getElementById('loiApps');
-
-        try {
-            const koLoiFolder = document.createElement('div');
-            koLoiFolder.className = 'app-icon';
-            koLoiFolder.style.setProperty('--index', 0);
-            koLoiFolder.innerHTML = `
-                <img src="https://cdn-icons-png.flaticon.com/128/716/716875.png" alt="Folder">
-                <span>ko lỗi app</span>
+        Object.entries(urls).forEach(([site]) => {
+            const div = document.createElement('div');
+            div.className = 'flex items-center p-2 bg-transparent rounded card';
+            div.innerHTML = `
+                <input type="checkbox" id="${site}" value="${site}" class="mr-2 h-4 w-4 text-cyan-400 border-2 border-cyan-400">
+                <label for="${site}" class="text-gray-100 font-bold">${site.toUpperCase()}</label>
             `;
-            koLoiFolder.onclick = () => openFolder('koLoiModal');
-            cloudScreen.appendChild(koLoiFolder);
+            siteCheckboxesDiv.appendChild(div);
+        });
 
-            const loiFolder = document.createElement('div');
-            loiFolder.className = 'app-icon';
-            loiFolder.style.setProperty('--index', 1);
-            loiFolder.innerHTML = `
-                <img src="https://cdn-icons-png.flaticon.com/128/716/716875.png" alt="Folder">
-                <span>lỗi app</span>
-            `;
-            loiFolder.onclick = () => openFolder('loiModal');
-            cloudScreen.appendChild(loiFolder);
-
-            const settingApp = document.createElement('div');
-            settingApp.className = 'app-icon';
-            settingApp.style.setProperty('--index', 2);
-            settingApp.innerHTML = `
-                <img src="https://cdn-icons-png.flaticon.com/128/484/484562.png" alt="Setting">
-                <span>Setting</span>
-            `;
-            settingApp.onclick = () => openIframe('setting');
-            cloudScreen.appendChild(settingApp);
-
-            noVpnApps.forEach((app, index) => {
-                const appName = app.name.toLowerCase().trim();
-                if (iframes[appName]) {
-                    const appDiv = document.createElement('div');
-                    appDiv.className = 'app-icon';
-                    appDiv.style.setProperty('--index', index + 3);
-                    appDiv.innerHTML = `
-                        <img src="https://cdn-icons-png.flaticon.com/128/149/149452.png" alt="${app.name}">
-                        <span>${app.name}</span>
-                    `;
-                    appDiv.onclick = () => {
-                        closeFolder('koLoiModal');
-                        openIframe(appName);
-                    };
-                    koLoiAppsContainer.appendChild(appDiv);
-                }
-            });
-
-            needVpnApps.forEach((app, index) => {
-                const appName = app.name.toLowerCase().trim();
-                if (iframes[appName]) {
-                    const appDiv = document.createElement('div');
-                    appDiv.className = 'app-icon';
-                    appDiv.style.setProperty('--index', index + 3 + noVpnApps.length);
-                    appDiv.innerHTML = `
-                        <img src="https://cdn-icons-png.flaticon.com/128/149/149452.png" alt="${app.name}">
-                        <span>${app.name}</span>
-                    `;
-                    appDiv.onclick = () => {
-                        closeFolder('loiModal');
-                        openIframe(appName);
-                    };
-                    loiAppsContainer.appendChild(appDiv);
-                }
-            });
-
-            if (!noVpnApps.length && !needVpnApps.length) {
-                errorMessage.textContent = "Không có ứng dụng nào để hiển thị!";
-                errorMessage.style.display = 'block';
-            } else {
-                errorMessage.style.display = 'none';
-            }
-        } catch (error) {
-            errorMessage.textContent = "Lỗi tải ứng dụng: " + error.message;
-            errorMessage.style.display = 'block';
-        }
-    }
-
-    function openFolder(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.add('active');
-            modal.onclick = (e) => {
-                if (e.target === modal) {
-                    closeFolder(modalId);
-                }
-            };
-        }
-    }
-
-    function closeFolder(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.remove('active');
-            modal.onclick = null;
-        }
-    }
-
-    function openIframe(appName) {
-        if (currentIframe) {
-            currentIframe.classList.remove('active');
-            currentIframe.style.display = 'none';
-        }
-
-        const iframe = iframes[appName];
-        if (iframe) {
-            iframe.style.opacity = '0';
-            iframe.style.display = 'block';
-            setTimeout(() => {
-                iframe.classList.add('active');
-                iframe.style.opacity = '1';
-                currentIframe = iframe;
-            }, 10);
+        async function sendWebhook(site, code) {
+            if (!WEBHOOK_URL) return;
 
             try {
-                iframe.contentWindow.postMessage({ type: 'lockNavigation' }, '*');
-                iframe.contentWindow.postMessage({ type: 'requestSecurity', appName: appName }, '*');
-                if (appName === 'setting') {
-                    const savedUrl = localStorage.getItem('backgroundUrl') || '';
-                    iframe.contentWindow.postMessage({ type: 'initBackground', url: savedUrl }, '*');
-                }
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: null,
+                        embeds: [{
+                            title: '🟢 Bypass Thành Công',
+                            description: `**Site:** ${site.toUpperCase()}\n**Mã:** \`${code}\`\n**Số lần bypass:** ${bypassCount}\n**Thời gian:** ${new Date().toLocaleString('vi-VN')}`,
+                            color: 0x06b6d4,
+                            timestamp: new Date().toISOString()
+                        }]
+                    })
+                });
             } catch (error) {
-                console.warn(`Không thể gửi tin nhắn tới iframe ${appName}: ${error.message}`);
-            }
-        } else {
-            document.getElementById('errorMessage').textContent = `Không thể mở ứng dụng ${appName}. Nhấn "Thử lại" hoặc liên hệ hỗ trợ.`;
-            document.getElementById('errorMessage').style.display = 'block';
-            const retryButton = document.createElement('button');
-            retryButton.className = 'retry-button';
-            retryButton.textContent = 'Thử lại';
-            retryButton.onclick = () => {
-                initializeIframes().then(() => loadApps()).then(() => openIframe(appName));
-                retryButton.style.display = 'none';
-                document.getElementById('errorMessage').style.display = 'none';
-            };
-            document.getElementById('cloudScreen').appendChild(retryButton);
-            retryButton.style.display = 'block';
-        }
-    }
-
-    function closeIframe() {
-        if (currentIframe) {
-            currentIframe.classList.remove('active');
-            currentIframe.style.display = 'none';
-            currentIframe = null;
-        }
-    }
-
-    function reloadIframe() {
-        if (currentIframe) {
-            if (currentIframe.srcdoc) {
-                const temp = currentIframe.srcdoc;
-                currentIframe.srcdoc = '';
-                setTimeout(() => currentIframe.srcdoc = temp, 10);
-            } else if (currentIframe.src) {
-                const tempSrc = currentIframe.src;
-                currentIframe.src = '';
-                setTimeout(() => currentIframe.src = tempSrc, 10);
+                console.error(`Lỗi gửi webhook cho ${site}: ${error.message}`);
             }
         }
-    }
 
-    async function initializeCloud() {
-        try {
-            const startTime = performance.now();
-            await initializeIframes();
-            await loadApps();
-            initializationComplete = true;
-            const savedBackground = localStorage.getItem('backgroundUrl');
-            if (savedBackground) {
-                document.querySelector('.cloud-container').style.background = `url("${savedBackground}") no-repeat center center`;
-                document.querySelector('.cloud-container').style.backgroundSize = 'cover';
+        async function startBypass() {
+            const selectedSites = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            if (selectedSites.length === 0) {
+                statusDiv.textContent = 'Vui lòng chọn ít nhất một nghiệm vụ!';
+                statusDiv.className = 'text-red-400 text-base font-bold mb-3 text-center fade-in';
+                return;
             }
-        } catch (error) {
-            document.getElementById('errorMessage').textContent = "Lỗi khởi tạo Cloud: " + error.message;
-            document.getElementById('errorMessage').style.display = 'block';
-        }
-    }
 
-    function handleMessage(event) {
-        if (event.data.type === 'lockNavigation') {
-            const iframe = event.source.frameElement.contentWindow;
-            iframe.addEventListener('beforeunload', function(e) {
-                if (!iframe.location.reload) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            iframe.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
-        } else if (event.data.type === 'changeBackground') {
-            const url = event.data.url;
-            if (url) {
-                const cloudContainer = document.querySelector('.cloud-container');
-                cloudContainer.style.background = `url("${url}") no-repeat center center`;
-                cloudContainer.style.backgroundSize = 'cover';
-                localStorage.setItem('backgroundUrl', url);
-            }
-        } else if (event.data.type === 'closeIframe') {
-            closeIframe();
-        } else if (event.data.type === 'applySecurity') {
-            try {
-                const iframe = event.source.frameElement;
-                const script = document.createElement('script');
-                script.textContent = event.data.script;
-                iframe.contentDocument.body.appendChild(script);
-            } catch (error) {
-                console.warn(`Không thể áp dụng script bảo mật: ${error.message}`);
-            }
-        }
-    }
+            startButton.disabled = true;
+            startButton.textContent = 'Processing...';
+            statusDiv.textContent = 'Starting bypass...';
+            statusDiv.className = 'text-cyan-200 text-base font-bold mb-3 text-center fade-in';
+            resultsDiv.innerHTML = '';
 
-    window.addEventListener('message', function(event) {
-        if (event.data.type === 'requestSecurity') {
-            const iframe = iframes[event.data.appName];
-            if (iframe) {
+            for (const site of selectedSites) {
+                bypassCount++;
+                localStorage.setItem('bypassCount', bypassCount);
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'p-3 bg-transparent rounded-lg shadow-lg card fade-in';
+                resultDiv.innerHTML = `
+                    <h2 class="text-lg font-extrabold text-cyan-200">${site.toUpperCase()}</h2>
+                    <p class="text-gray-400 text-sm font-medium">Processing...</p>
+                    <div class="w-full bg-gray-800 rounded-full h-2 mt-2">
+                        <div id="progress-${site}" class="progress-bar h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 font-medium mt-1">Time remaining: <span id="timer-${site}">75s</span></p>
+                `;
+                resultsDiv.appendChild(resultDiv);
+
+                let timeLeft = 75;
+                const timerSpan = document.getElementById(`timer-${site}`);
+                const progressBar = document.getElementById(`progress-${site}`);
+                const timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerSpan.textContent = `${timeLeft}s`;
+                    progressBar.style.width = `${((75 - timeLeft) / 75) * 100}%`;
+                    if (timeLeft <= 0) clearInterval(timerInterval);
+                }, 1000);
+
                 try {
-                    iframe.contentWindow.postMessage({
-                        type: 'applySecurity',
-                        script: `
-                            document.addEventListener('contextmenu', function(e) {
-                                e.preventDefault();
-                                alert('Chuột phải đã bị vô hiệu hóa!');
-                                return false;
-                            });
-                            document.addEventListener('keydown', function(e) {
-                                if (
-                                    e.keyCode === 123 || 
-                                    (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
-                                    (e.ctrlKey && e.keyCode === 85) || 
-                                    (e.ctrlKey && e.keyCode === 83)
-                                ) {
-                                    e.preventDefault();
-                                    alert('Công cụ phát triển và lưu mã nguồn đã bị vô hiệu hóa!');
-                                    return false;
-                                }
-                            });
-                            window.addEventListener('beforeunload', function(e) {
-                                e.preventDefault();
-                                e.returnValue = '';
-                                return '';
-                            });
-                        `
-                    }, '*');
+                    const response = await fetch(urls[site].url, { method: 'POST' });
+                    const html = await response.text();
+                    const match = html.match(/<span id="layma_me_vuatraffic"[^>]*>\s*(\d+)\s*<\/span>/);
+                    await new Promise(resolve => setTimeout(resolve, 75000));
+                    clearInterval(timerInterval);
+                    timerSpan.textContent = '0s';
+                    progressBar.style.width = '100%';
+
+                    if (match) {
+                        resultDiv.innerHTML = `
+                            <h2 class="text-lg font-extrabold text-cyan-200">${site.toUpperCase()}</h2>
+                            <div class="flex items-center">
+                                <p class="text-green-400 text-sm font-bold">Code: ${match[1]}</p>
+                                <button class="custom-btn copy-btn ml-3 text-gray-100 font-extrabold py-1 px-2 rounded-lg text-sm" data-code="${match[1]}">
+                                    Copy
+                                </button>
+                            </div>
+                        `;
+                        await sendWebhook(site, match[1]);
+                    } else {
+                        resultDiv.innerHTML = `
+                            <h2 class="text-lg font-extrabold text-cyan-200">${site.toUpperCase()}</h2>
+                            <p class="text-red-400 text-sm font-bold">No code found. Link may be broken.</p>
+                        `;
+                    }
                 } catch (error) {
-                    console.warn(`Không thể gửi script bảo mật cho iframe ${event.data.appName}: ${error.message}`);
+                    clearInterval(timerInterval);
+                    timerSpan.textContent = '0s';
+                    progressBar.style.width = '100%';
+                    resultDiv.innerHTML = `
+                        <h2 class="text-lg font-extrabold text-cyan-200">${site.toUpperCase()}</h2>
+                        <p class="text-red-400 text-sm font-bold">Error: ${error.message}</p>
+                    `;
                 }
             }
-        } else {
-            handleMessage(event);
-        }
-    });
 
-    window.onload = () => {
-        validateNavigation();
-        if (window.location.hash === '#creating') {
-            currentSection = 'creating';
-            validateNavigation();
-            initializeCloud().then(() => {
-                navigateTo('cloud');
+            startButton.disabled = false;
+            startButton.textContent = 'Start Bypass';
+            statusDiv.textContent = 'Bypass completed!';
+            statusDiv.className = 'text-green-400 text-base font-bold mb-3 text-center fade-in';
+
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(btn.dataset.code);
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        btn.textContent = 'Copy';
+                    }, 2000);
+                });
             });
         }
-    };
 
-    window.addEventListener('hashchange', async () => {
-        currentSection = window.location.hash.replace('#', '') || 'home';
-        validateNavigation();
-
-        if (currentSection === 'creating') {
-            await initializeCloud();
-            navigateTo('cloud');
-        }
-    });
-
-    function base64_decode(encoded) {
-        return atob(encoded);
-    }
-</script>
+        startButton.addEventListener('click', startBypass);
+    </script>
 </body>
 </html>
