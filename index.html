@@ -255,7 +255,7 @@
         const sendWebhook = async (site, code) => {
             if (!WEBHOOK_URL) return;
             try {
-                await fetch(WEBHOOK_URL, {
+                await fetch(WHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -276,28 +276,37 @@
         const checkSiteLinks = async (site) => {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-            const promises = SITES[site].links.map(async (link) => {
-                try {
-                    const response = await fetch(link, {
-                        method: 'POST',
-                        cache: 'no-store',
-                        signal: controller.signal
-                    });
-                    const html = await response.text();
-                    const match = html.match(/<span id="layma_me_vuatraffic"[^>]*>\s*(\d+)\s*<\/span>/);
-                    if (match) {
-                        SITES[site].url = link;
-                        return match[1];
+            try {
+                const promises = SITES[site].links.map(async (link) => {
+                    try {
+                        const response = await fetch(link, {
+                            method: 'POST',
+                            cache: 'no-store',
+                            signal: controller.signal
+                        });
+                        if (!response.ok) {
+                            throw new Error(`HTTP error: ${response.status}`);
+                        }
+                        const html = await response.text();
+                        const match = html.match(/<span id="layma_me_vuatraffic"[^>]*>\s*(\d+)\s*<\/span>/);
+                        if (match) {
+                            SITES[site].url = link;
+                            return match[1];
+                        }
+                        return null;
+                    } catch (error) {
+                        console.error(`Error checking link ${link} for ${site}: ${error.message}`);
+                        return null;
                     }
-                    return null;
-                } catch (error) {
-                    console.error(`Error checking link ${link} for ${site}: ${error.message}`);
-                    return null;
-                }
-            });
-            clearTimeout(timeoutId);
-            const results = await Promise.all(promises);
-            return results.find(code => code !== null) || null;
+                });
+                const results = await Promise.all(promises);
+                return results.find(code => code !== null) || null;
+            } catch (error) {
+                console.error(`Error processing links for ${site}: ${error.message}`);
+                return null;
+            } finally {
+                clearTimeout(timeoutId);
+            }
         };
 
         // Process a single site
@@ -375,24 +384,30 @@
             statusDiv.className = 'text-cyan-200 text-base font-bold mb-3 text-center fade-in';
             resultsDiv.innerHTML = '';
 
-            const codes = {};
-            let successCount = 0;
-            for (const site of selectedSites) {
-                codes[site] = await checkSiteLinks(site);
-                if (codes[site]) {
-                    successCount++;
+            try {
+                const codes = {};
+                let successCount = 0;
+                for (const site of selectedSites) {
+                    codes[site] = await checkSiteLinks(site);
+                    if (codes[site]) {
+                        successCount++;
+                    }
                 }
-            }
 
-            // Process sites
-            for (const site of selectedSites) {
-                await processSite(site, codes[site]);
-            }
+                // Process sites
+                for (const site of selectedSites) {
+                    await processSite(site, codes[site]);
+                }
 
-            startButton.disabled = false;
-            startButton.textContent = 'Start Bypass';
-            statusDiv.innerHTML = `Bypass completed! (${successCount}/${selectedSites.length} sites successful)`;
-            statusDiv.className = 'text-green-400 text-base font-bold mb-3 text-center fade-in';
+                statusDiv.innerHTML = `Bypass completed! (${successCount}/${selectedSites.length} sites successful)`;
+                statusDiv.className = 'text-green-400 text-base font-bold mb-3 text-center fade-in';
+            } catch (error) {
+                statusDiv.innerHTML = `Error occurred: ${error.message}`;
+                statusDiv.className = 'text-red-400 text-base font-bold mb-3 text-center fade-in';
+            } finally {
+                startButton.disabled = false;
+                startButton.textContent = 'Start Bypass';
+            }
 
             document.querySelectorAll('.copy-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
