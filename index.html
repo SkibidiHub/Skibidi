@@ -1,376 +1,156 @@
-
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hanami Nikata Helper</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VMOS Cloud Phone</title>
+
+  <!-- Vue 3, Axios, Element Plus -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.3.14/dist/index.css">
+  <script src="https://unpkg.com/element-plus@2.3.14/dist/index.full.min.js"></script>
+
+  <style>
+    body {margin:0;font-family:Inter,system-ui,Arial;background:#f5f7fb;color:#222;}
+    .app{height:100vh;display:flex;flex-direction:column}
+    header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#fff;border-bottom:1px solid #e6e9ef;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    header .logo{font-weight:700;font-size:18px;color:#0079f2;}
+    .main{flex:1;display:flex;gap:20px;padding:20px;overflow:hidden}
+    .sidebar{width:320px;background:#fff;border-radius:12px;padding:16px;overflow:auto;border:1px solid #e7e9ef;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+    .device-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:1px solid rgba(24,26,27,.06);margin-bottom:12px;cursor:pointer;transition:.2s}
+    .device-item:hover{background:#f0f6ff}
+    .device-item.active{background:rgba(0,121,242,0.08);border-color:#0079f2}
+    .device-thumb{width:46px;height:78px;border-radius:6px;background:linear-gradient(135deg,#0079f2,#00c6ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    .device-info{flex:1;min-width:0}
+    .device-info .name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .device-info .os{font-size:12px;color:#666;margin-top:4px}
+    .canvas-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:16px}
+    .phone-frame{width:400px;height:720px;border-radius:28px;border:14px solid #222;background:#000;overflow:hidden;position:relative;box-shadow:0 12px 30px rgba(0,0,0,.2)}
+    canvas{display:block;width:100%;height:100%;background:#111}
+    .actions{display:flex;gap:12px;margin-top:10px}
+    .status{font-size:13px;color:#444;margin-top:8px}
+    footer{padding:12px;text-align:center;font-size:12px;color:#888;border-top:1px solid #e6e9ef;background:#fafafa}
+    .store-card{border:1px solid #e6e9ef;border-radius:10px;padding:16px;margin-bottom:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .store-card h3{margin:0 0 8px 0;font-size:16px;color:#0079f2}
+    .store-card p{margin:0 0 12px 0;font-size:13px;color:#555}
+  </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel">
-        const API_BASE_URL = 'https://api.nikata.fun';
+  <div id="app" class="app"></div>
 
-        // Hàm gọi API chung
-        async function callApi(endpoint, data) {
-            try {
-                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                });
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.message || `Lỗi ${response.status}`);
-                return result;
-            } catch (error) {
-                console.error(`Lỗi khi gọi API ${endpoint}:`, error.message);
-                return { message: error.message };
-            }
+  <script>
+  const { createApp, ref, onMounted } = Vue;
+
+  createApp({
+    template:`
+      <div>
+        <header>
+          <div class="logo">☁️ VMOS Cloud Phone</div>
+          <el-button type="primary" size="small" @click="showStore=true">Cửa hàng thiết bị</el-button>
+        </header>
+
+        <div class="main">
+          <aside class="sidebar">
+            <div style="font-weight:700;margin-bottom:10px">Danh sách thiết bị</div>
+            <div v-for="d in devices" :key="d.deviceId" :class="['device-item',{active:selected && selected.deviceId===d.deviceId}]" @click="selectDevice(d)">
+              <div class="device-thumb">VM</div>
+              <div class="device-info">
+                <div class="name">{{ d.name }}</div>
+                <div class="os">ID: {{ d.deviceId }} · {{ d.os }}</div>
+              </div>
+            </div>
+          </aside>
+
+          <section class="canvas-wrap">
+            <div class="phone-frame">
+              <canvas ref="phoneCanvas" width="400" height="720"></canvas>
+            </div>
+            <div class="actions">
+              <el-button type="primary" @click="startEmulator">Bắt đầu</el-button>
+              <el-button @click="stopEmulator">Tắt</el-button>
+              <el-button @click="restartEmulator">Khởi động lại</el-button>
+            </div>
+            <div v-if="status" class="status">Trạng thái: {{ status.status }} | Uptime: {{ status.uptime }}s</div>
+          </section>
+        </div>
+
+        <el-dialog v-model="showStore" title="Cửa hàng thiết bị" width="500px">
+          <div class="store-card" v-for="plan in storePlans" :key="plan.id">
+            <h3>{{ plan.name }}</h3>
+            <p>{{ plan.desc }}</p>
+            <el-button type="primary" @click="buyPlan(plan)">{{ plan.button }}</el-button>
+          </div>
+        </el-dialog>
+
+        <footer>
+          VMOS Cloud Phone UI Demo · Mua đa thiết bị miễn phí hoặc nâng cấp · Vue3 + Element Plus
+        </footer>
+      </div>
+    `,
+    setup(){
+      const backendUrl = "https://api.vmoscloud.com"; // thay URL thật nếu có
+      const devices = ref([
+        { deviceId:"emu-001", name:"Cloud Phone #1", os:"Android 11" }
+      ]);
+      const selected = ref(devices.value[0]);
+      const status = ref(null);
+      const phoneCanvas = ref(null);
+      let ctx;
+
+      const showStore = ref(false);
+      const storePlans = ref([
+        {id:1, name:"Thiết bị miễn phí", desc:"Thêm 1 Cloud Phone miễn phí (cơ bản)", button:"Thêm miễn phí"},
+        {id:2, name:"Gói Pro (5 thiết bị)", desc:"Chạy cùng lúc 5 Cloud Phone với hiệu năng cao", button:"Mua Pro"},
+        {id:3, name:"Gói Enterprise (10 thiết bị)", desc:"Cho doanh nghiệp, nhiều máy hơn", button:"Liên hệ"}
+      ]);
+
+      function selectDevice(d){ selected.value = d; }
+
+      async function startEmulator(){
+        if(!selected.value) return;
+        try{
+          await axios.post(`${backendUrl}/start`, { deviceId:selected.value.deviceId });
+          const res = await axios.get(`${backendUrl}/status?deviceId=${selected.value.deviceId}`);
+          status.value = res.data;
+        }catch(e){ status.value = {status:"offline",uptime:0}; }
+        drawScreen();
+      }
+
+      function stopEmulator(){
+        status.value = null;
+        ctx.fillStyle = "#111"; ctx.fillRect(0,0,400,720);
+        ctx.fillStyle = "#fff"; ctx.fillText("Đã tắt",160,360);
+      }
+
+      function restartEmulator(){ stopEmulator(); setTimeout(startEmulator,300); }
+
+      function drawScreen(){
+        ctx.clearRect(0,0,400,720);
+        const g = ctx.createLinearGradient(0,0,400,720);
+        g.addColorStop(0,"#0079f2"); g.addColorStop(1,"#00c6ff");
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,400,720);
+        ctx.fillStyle = "#fff"; ctx.font = "20px sans-serif";
+        ctx.fillText("VMOS Cloud Phone",100,340);
+        if(status.value) ctx.fillText("Uptime: "+status.value.uptime+"s",120,380);
+      }
+
+      function buyPlan(plan){
+        if(plan.id===1){
+          const id = "emu-"+Math.floor(Math.random()*9999);
+          devices.value.push({ deviceId:id, name:"Cloud Phone #"+devices.value.length, os:"Android 12" });
+          showStore.value=false;
+        } else {
+          alert("Bạn đã chọn: "+plan.name+" (demo)");
         }
+      }
 
-        // API: Kiểm tra token Discord (giả lập hợp lệ để bypass)
-        async function checkToken(token) {
-            return { message: 'Token hợp lệ !' }; // Giả lập để bypass
-            // Nếu muốn gọi API thực tế, bỏ comment dòng dưới
-            // return await callApi('/check_token', { token });
-        }
+      onMounted(()=>{ ctx = phoneCanvas.value.getContext("2d"); stopEmulator(); });
 
-        // API: Kiểm tra số dư Hcoin (bypass: luôn trả về 99999)
-        async function checkHcoin(token) {
-            return { message: '99999' }; // Bypass Hcoin
-        }
-
-        // API: Mua máy Ugphone 4H
-        async function buyUgphone(token, ugphone_id, ugphone_token, server) {
-            return await callApi('/buy_device_ugphone', { token, ugphone_id, ugphone_token, server });
-        }
-
-        // API: Mua máy CC Cloud Phone trial
-        async function buyCccloud(user_token, token, device, deviceToken, ggToken, lang) {
-            return await callApi('/buy_device_cccloud', { user_token, token, device, deviceToken, ggToken, lang });
-        }
-
-        // API: Mua máy Vmos Cloud trial
-        async function buyVmos(token, vmos_token, userId) {
-            return await callApi('/buy_device_vmos', { token, vmos_token, userId });
-        }
-
-        // API: Mua máy Vsphone Cloud trial
-        async function buyVsphone(token, vmos_token, userId) {
-            return await callApi('/buy_device_vsphone', { token, vmos_token, userId });
-        }
-
-        // API: Lấy danh sách tài khoản của dịch vụ
-        async function checkAccountManager(token, service) {
-            return await callApi('/check_account_manager', { token, service });
-        }
-
-        // API: Lấy dữ liệu Local Storage của tài khoản
-        async function getAccountService(token, service, id_account) {
-            return await callApi('/get_account_service', { token, service, id_account });
-        }
-
-        // API: Xóa một tài khoản cụ thể
-        async function deleteAccountManager(token, service, id_account) {
-            return await callApi('/delete_account_manager', { token, service, id_account });
-        }
-
-        // API: Xóa tất cả tài khoản của dịch vụ
-        async function clearAccountService(token, service) {
-            return await callApi('/clear_account_service', { token, service });
-        }
-
-        // API: Tạo tài khoản Ugphone mới
-        async function getLocalStorageUgphone(token) {
-            return await callApi('/get_localstorageugphone', { token });
-        }
-
-        // API: Tạo tài khoản CC Cloud Phone mới
-        async function getLocalStorageCccloud(token) {
-            return await callApi('/get_localstoragecccloud', { token });
-        }
-
-        // API: Tạo tài khoản Redfinger mới
-        async function getRedfinger(token) {
-            return await callApi('/get_redfinger', { token });
-        }
-
-        // API: Tạo tài khoản Vmos Cloud mới
-        async function getLocalStorageVmos(token) {
-            return await callApi('/get_localstoragevmos', { token });
-        }
-
-        // API: Tạo tài khoản Vsphone Cloud mới
-        async function getLocalStorageVsphone(token) {
-            return await callApi('/get_localstoragevsphone', { token });
-        }
-
-        // Nhận diện trang web hiện tại
-        function detectWebsite() {
-            const url = window.location.href;
-            if (url.includes('ugphone.com')) return 'UG';
-            if (url.includes('cloudemulator.net')) return 'RE';
-            if (url.includes('cccloudphone.com')) return 'CC';
-            if (url.includes('vmoscloud.com')) return 'VM';
-            if (url.includes('vsphone.com')) return 'VS';
-            if (url.includes('vuotlink.nikata.fun')) return 'ALL';
-            return 'UNKNOWN';
-        }
-
-        // React Component
-        function HanamiNikataApp() {
-            const [token, setToken] = React.useState('');
-            const [service, setService] = React.useState(detectWebsite());
-            const [param1, setParam1] = React.useState('');
-            const [param2, setParam2] = React.useState('');
-            const [param3, setParam3] = React.useState('');
-            const [param4, setParam4] = React.useState('');
-            const [param5, setParam5] = React.useState('');
-            const [accountId, setAccountId] = React.useState('');
-            const [status, setStatus] = React.useState('Đang chờ...');
-
-            const handleCheckToken = async () => {
-                if (!token) {
-                    setStatus('Vui lòng nhập token!');
-                    return;
-                }
-                setStatus('Đang kiểm tra token...');
-                const result = await checkToken(token);
-                setStatus(`Trạng thái: ${result.message}`);
-                if (result.message.includes('hợp lệ')) {
-                    localStorage.setItem('hanami_discord_token', token);
-                }
-            };
-
-            const handleCheckHcoin = async () => {
-                const savedToken = localStorage.getItem('hanami_discord_token') || token;
-                if (!savedToken) {
-                    setStatus('Vui lòng nhập hoặc kiểm tra token trước!');
-                    return;
-                }
-                setStatus('Đang kiểm tra Hcoin...');
-                const result = await checkHcoin(savedToken);
-                setStatus(`Số dư Hcoin: ${result.message}`);
-            };
-
-            const handleBuyDevice = async () => {
-                const savedToken = localStorage.getItem('hanami_discord_token') || token;
-                if (!savedToken) {
-                    setStatus('Vui lòng nhập hoặc kiểm tra token trước!');
-                    return;
-                }
-                const selectedService = service === 'ALL' ? document.getElementById('serviceSelect')?.value : service;
-                if (!selectedService) {
-                    setStatus('Vui lòng chọn dịch vụ!');
-                    return;
-                }
-                setStatus(`Đang mua máy ${selectedService}...`);
-                let result;
-                switch (selectedService) {
-                    case 'UG':
-                        if (!param1 || !param2 || !param3) {
-                            setStatus('Vui lòng nhập ugphone_id, ugphone_token, server!');
-                            return;
-                        }
-                        result = await buyUgphone(savedToken, param1, param2, param3);
-                        break;
-                    case 'CC':
-                        if (!param1 || !param2 || !param3 || !param4 || !param5) {
-                            setStatus('Vui lòng nhập user_token, device, deviceToken, ggToken, lang!');
-                            return;
-                        }
-                        result = await buyCccloud(param1, savedToken, param2, param3, param4, param5);
-                        break;
-                    case 'VM':
-                        if (!param1 || !param2) {
-                            setStatus('Vui lòng nhập vmos_token, userId!');
-                            return;
-                        }
-                        result = await buyVmos(savedToken, param1, param2);
-                        break;
-                    case 'VS':
-                        if (!param1 || !param2) {
-                            setStatus('Vui lòng nhập vmos_token, userId!');
-                            return;
-                        }
-                        result = await buyVsphone(savedToken, param1, param2);
-                        break;
-                    default:
-                        setStatus('Dịch vụ không hợp lệ!');
-                        return;
-                }
-                setStatus(`Trạng thái: ${result.message}`);
-            };
-
-            const handleCreateAccount = async () => {
-                const savedToken = localStorage.getItem('hanami_discord_token') || token;
-                if (!savedToken) {
-                    setStatus('Vui lòng nhập hoặc kiểm tra token trước!');
-                    return;
-                }
-                const selectedService = service === 'ALL' ? document.getElementById('serviceSelect')?.value : service;
-                if (!selectedService) {
-                    setStatus('Vui lòng chọn dịch vụ!');
-                    return;
-                }
-                setStatus(`Đang tạo tài khoản ${selectedService}...`);
-                let result;
-                switch (selectedService) {
-                    case 'UG':
-                        result = await getLocalStorageUgphone(savedToken);
-                        break;
-                    case 'CC':
-                        result = await getLocalStorageCccloud(savedToken);
-                        break;
-                    case 'RE':
-                        result = await getRedfinger(savedToken);
-                        break;
-                    case 'VM':
-                        result = await getLocalStorageVmos(savedToken);
-                        break;
-                    case 'VS':
-                        result = await getLocalStorageVsphone(savedToken);
-                        break;
-                    default:
-                        setStatus('Dịch vụ không hợp lệ!');
-                        return;
-                }
-                setStatus(`Trạng thái: ${result.message}`);
-            };
-
-            const handleDeleteAccount = async () => {
-                const savedToken = localStorage.getItem('hanami_discord_token') || token;
-                if (!savedToken) {
-                    setStatus('Vui lòng nhập hoặc kiểm tra token trước!');
-                    return;
-                }
-                const selectedService = service === 'ALL' ? document.getElementById('serviceSelect')?.value : service;
-                if (!selectedService) {
-                    setStatus('Vui lòng chọn dịch vụ!');
-                    return;
-                }
-                if (!accountId) {
-                    setStatus('Vui lòng nhập ID tài khoản!');
-                    return;
-                }
-                setStatus('Đang xóa tài khoản...');
-                const result = await deleteAccountManager(savedToken, selectedService, accountId);
-                setStatus(`Trạng thái: ${result.message}`);
-            };
-
-            const handleClearAccounts = async () => {
-                const savedToken = localStorage.getItem('hanami_discord_token') || token;
-                if (!savedToken) {
-                    setStatus('Vui lòng nhập hoặc kiểm tra token trước!');
-                    return;
-                }
-                const selectedService = service === 'ALL' ? document.getElementById('serviceSelect')?.value : service;
-                if (!selectedService) {
-                    setStatus('Vui lòng chọn dịch vụ!');
-                    return;
-                }
-                setStatus('Đang xóa tất cả tài khoản...');
-                const result = await clearAccountService(savedToken, selectedService);
-                setStatus(`Trạng thái: ${result.message}`);
-            };
-
-            return (
-                <div className="fixed top-4 right-4 bg-white border border-gray-300 p-4 rounded-lg shadow-lg z-50 max-w-sm w-full font-sans">
-                    <div className="flex items-center mb-4">
-                        <img src="https://i.postimg.cc/Rhv19Fgs/icon128.png" alt="Hanami Nikata Logo" className="w-8 h-8 mr-2" />
-                        <h3 className="text-lg font-semibold">Hanami Nikata Helper</h3>
-                    </div>
-                    <p className="text-sm text-gray-500 mb-2">Trang hiện tại: {service === 'ALL' ? 'Tất cả dịch vụ' : service}</p>
-                    <input
-                        type="text"
-                        placeholder="Nhập token Discord"
-                        value={token}
-                        onChange={(e) => setToken(e.target.value)}
-                        className="w-full p-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <div className="grid grid-cols-2 gap-2 mb-3">
-                        <button onClick={handleCheckToken} className="bg-green-500 text-white py-2 rounded-md hover:bg-green-600">
-                            Kiểm tra token
-                        </button>
-                        <button onClick={handleCheckHcoin} className="bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-                            Kiểm tra Hcoin
-                        </button>
-                        <button onClick={handleBuyDevice} className="bg-purple-500 text-white py-2 rounded-md hover:bg-purple-600">
-                            Mua máy {service === 'ALL' ? '' : service}
-                        </button>
-                        <button onClick={handleCreateAccount} className="bg-teal-500 text-white py-2 rounded-md hover:bg-teal-600">
-                            Tạo tài khoản {service === 'ALL' ? '' : service}
-                        </button>
-                        <button onClick={handleDeleteAccount} className="bg-red-500 text-white py-2 rounded-md hover:bg-red-600">
-                            Xóa tài khoản
-                        </button>
-                        <button onClick={handleClearAccounts} className="bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600">
-                            Xóa tất cả tài khoản
-                        </button>
-                    </div>
-                    {service === 'ALL' && (
-                        <select id="serviceSelect" className="w-full p-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">Chọn dịch vụ</option>
-                            <option value="UG">Ugphone</option>
-                            <option value="CC">CC Cloud</option>
-                            <option value="RE">Redfinger</option>
-                            <option value="VM">Vmos</option>
-                            <option value="VS">Vsphone</option>
-                        </select>
-                    )}
-                    <input
-                        type="text"
-                        placeholder={`Nhập ${service === 'UG' ? 'ugphone_id' : service === 'CC' ? 'user_token' : 'vmos_token'}`}
-                        value={param1}
-                        onChange={(e) => setParam1(e.target.value)}
-                        className={`w-full p-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${service === 'ALL' || service === 'RE' ? 'hidden' : ''}`}
-                    />
-                    <input
-                        type="text"
-                        placeholder={`Nhập ${service === 'UG' ? 'ugphone_token' : service === 'CC' ? 'device' : 'userId'}`}
-                        value={param2}
-                        onChange={(e) => setParam2(e.target.value)}
-                        className={`w-full p-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${service === 'ALL' || service === 'RE' ? 'hidden' : ''}`}
-                    />
-                    <input
-                        type="text"
-                        placeholder={`Nhập ${service === 'UG' ? 'server' : 'deviceToken'}`}
-                        value={param3}
-                        onChange={(e) => setParam3(e.target.value)}
-                        className={`w-full p-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${service !== 'UG' && service !== 'CC' || service === 'ALL' ? 'hidden' : ''}`}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Nhập ggToken"
-                        value={param4}
-                        onChange={(e) => setParam4(e.target.value)}
-                        className={`w-full p-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${service !== 'CC' || service === 'ALL' ? 'hidden' : ''}`}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Nhập lang"
-                        value={param5}
-                        onChange={(e) => setParam5(e.target.value)}
-                        className={`w-full p-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${service !== 'CC' || service === 'ALL' ? 'hidden' : ''}`}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Nhập ID tài khoản (cho xóa)"
-                        value={accountId}
-                        onChange={(e) => setAccountId(e.target.value)}
-                        className="w-full p-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <p className="text-sm text-gray-700 mt-2">Trạng thái: {status}</p>
-                </div>
-            );
-        }
-
-        // Render React component
-        ReactDOM.render(<HanamiNikataApp />, document.getElementById('root'));
-    </script>
+      return {devices,selected,status,phoneCanvas,selectDevice,startEmulator,stopEmulator,restartEmulator,showStore,storePlans,buyPlan};
+    }
+  }).use(ElementPlus).mount("#app");
+  </script>
 </body>
 </html>
