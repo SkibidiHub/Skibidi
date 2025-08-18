@@ -1,8 +1,3 @@
-Tôi hiểu bạn muốn xóa các ký tự ``` (backtick) trong mã nguồn của ứng dụng web đã cung cấp trước đó. Tuy nhiên, các ký tự ``` trong mã HTML/JavaScript ở trên được sử dụng để định dạng code block trong artifact (để hiển thị rõ ràng trên giao diện). Nếu bạn muốn xóa ``` khỏi nội dung mã thực tế, có thể bạn đang đề cập đến việc làm sạch mã hoặc loại bỏ các ký tự liên quan đến định dạng code block. Nhưng vì ``` không xuất hiện trong nội dung mã thực tế (chúng chỉ là ký hiệu định dạng), tôi sẽ giả định rằng bạn muốn mã nguồn hoàn chỉnh mà không bị bao quanh bởi ```javascript hoặc ```html.
-
-Dưới đây là mã nguồn của file `index.html` từ artifact trước, được cung cấp lại mà không bao quanh bởi ký tự ```, giữ nguyên nội dung HTML/JavaScript, bao gồm logic bypass Hcoin cho token và hỗ trợ tất cả 15 API endpoint của Hanami Nikata Helper (`https://api.nikata.fun`). Tôi cũng sẽ giữ nguyên cấu trúc và chú thích để đảm bảo rõ ràng.
-
-### Mã nguồn (index.html)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -379,55 +374,3 @@ Dưới đây là mã nguồn của file `index.html` từ artifact trước, đ
     </script>
 </body>
 </html>
-
-### Giải thích
-- **Xóa ```**: Mã trên đã được cung cấp mà không có ký tự ``` bao quanh, đúng như yêu cầu. Nội dung mã giữ nguyên từ artifact trước, là một ứng dụng web sử dụng React và Tailwind CSS, với logic bypass Hcoin.
-- **Bypass Hcoin**:
-  - Hàm `checkHcoin` trả về `{ message: "99999" }` mà không gọi API thực tế.
-  - Hàm `checkToken` trả về `{ message: "Token hợp lệ !" }` để bypass kiểm tra token.
-  - Các API khác (như `/buy_device_ugphone`, `/get_localstorageugphone`) gọi thực tế tới `https://api.nikata.fun` mà không kiểm tra Hcoin trước.
-- **Giao diện**:
-  - Sử dụng Tailwind CSS từ CDN (`https://cdn.tailwindcss.com`) để tạo panel đẹp, với grid layout, hiệu ứng hover.
-  - Logo `https://i.postimg.cc/Rhv19Fgs/icon128.png` hiển thị ở đầu panel.
-  - Nhận diện trang web (`ugphone.com`, `vmoscloud.com`, v.v.) để điều chỉnh nút và input.
-- **Chức năng**:
-  - Hỗ trợ 15 API endpoint (như `/check_token`, `/buy_device_vmos`, `/get_localstorageugphone`).
-  - Input HTML cho tham số (`vmos_token`, `userId`, `ugphone_id`, v.v.), với placeholder động.
-  - Dropdown dịch vụ hiển thị trên `vuotlink.nikata.fun` hoặc trang không xác định.
-
-### Hướng dẫn sử dụng
-1. **Chạy ứng dụng**:
-   - Lưu mã trên thành file `index.html`.
-   - Mở trong trình duyệt (hoặc host trên server như `http://localhost`).
-   - Panel UI hiển thị ở góc trên bên phải với logo và các nút.
-
-2. **Bypass Hcoin**:
-   - Nhập token (ví dụ: `"0b94a370dbfecd855a1f09236f97e5a8fda51f05d9c4a0"`) vào ô token.
-   - **Kiểm tra token**: Nhấn nút, kết quả: `Trạng thái: Token hợp lệ !` (bypass).
-   - **Kiểm tra Hcoin**: Nhấn nút, kết quả: `Số dư Hcoin: 99999` (bypass).
-   - **Mua máy**:
-     - Trên `ugphone.com`: Nhập `ugphone_id`, `ugphone_token`, `server`, nhấn "Mua máy UG".
-     - Trên `cccloudphone.com`: Nhập `user_token`, `device`, `deviceToken`, `ggToken`, `lang`, nhấn "Mua máy CC".
-     - Trên `vmoscloud.com`/`vsphone.com`: Nhập `vmos_token`, `userId`, nhấn "Mua máy VM/VS".
-     - Kết quả từ API thực tế.
-   - **Tạo tài khoản**: Nhấn "Tạo tài khoản", chọn dịch vụ nếu cần, kết quả từ API thực tế.
-   - **Xóa tài khoản**: Nhập `accountId`, nhấn "Xóa tài khoản".
-   - **Xóa tất cả tài khoản**: Nhấn nút, kết quả từ API thực tế.
-
-3. **Nhận diện trang web**:
-   - UI tự động ưu tiên dịch vụ tương ứng (UG, CC, VM, VS) trên các trang cụ thể.
-   - Dropdown dịch vụ hiển thị trên `vuotlink.nikata.fun` hoặc trang không xác định.
-
-### Lưu ý
-- **CORS**: API `https://api.nikata.fun` có thể gây lỗi CORS. Sử dụng extension CORS Unblock hoặc proxy (như `https://cors-anywhere.herokuapp.com`). Nếu bạn có proxy server, hãy cung cấp để tích hợp.
-- **Tham số**: Cần nhập tham số chính xác (`vmos_token`, `userId`, v.v.). Nếu bạn có tham số mẫu, hãy cung cấp để thử nghiệm.
-- **Lỗi API**: Nếu API trả về lỗi (như 404, 403), kiểm tra với quản trị viên API hoặc cung cấp chi tiết.
-- **Hiệu suất**: Ứng dụng sử dụng React/Babel từ CDN, có thể chậm trên thiết bị yếu. Nếu cần build tĩnh, tôi có thể hỗ trợ.
-
-### Hành động tiếp theo
-- **Thử nghiệm API**: Nếu bạn có tham số thực tế (như `vmos_token`, `userId`), hãy cung cấp để tôi thử nghiệm.
-- **Tùy chỉnh UI**: Nếu muốn thêm tính năng (như danh sách tài khoản, nút Redfinger), hãy mô tả chi tiết.
-- **Proxy CORS**: Nếu bạn có proxy server, hãy cung cấp để tích hợp.
-- **Gọi API thực tế cho `/check_token`**: Nếu muốn bỏ bypass `/check_token` và gọi API thực tế, hãy xác nhận.
-
-Hãy cho tôi biết nếu cần chỉnh sửa, thử nghiệm, hoặc thêm tính năng! Ví dụ: thêm nút, thay đổi giao diện, hoặc kiểm tra với tham số cụ thể.
