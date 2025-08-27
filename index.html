@@ -3,281 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trình Duyệt Ẩn Danh & Chạy HTML</title>
+    <title>Máy Tính Khoa Học</title>
     <style>
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #0f2027, #203a43, #2c5364);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeOut 0.8s ease-in-out 4.2s forwards;
-        }
-
-        .loader {
-            width: 100px;
-            height: 100px;
-            border: 10px solid transparent;
-            border-top: 10px solid #00d4ff;
-            border-bottom: 10px solid #ff007a;
-            border-radius: 50%;
-            animation: spin 1.2s linear infinite;
-            position: relative;
-        }
-
-        .loader::before {
-            content: '';
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border: 6px solid transparent;
-            border-left: 6px solid #ffeb3b;
-            border-right: 6px solid #8e2de2;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite reverse;
-            top: 7px;
-            left: 7px;
-        }
-
-        .loader::after {
-            content: '';
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            border-radius: 50%;
-            top: 17px;
-            left: 17px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: float 3s linear infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); opacity: 0.8; }
-            100% { transform: translateY(-100vh) scale(0.2); opacity: 0; }
-        }
-
-        .loading-text {
-            color: white;
-            font-size: 28px;
-            margin-top: 20px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.05); }
-        }
-
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
-        }
-
-        /* Main Content */
-        .container {
-            text-align: center;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            transform: scale(0);
-            animation: scaleIn 0.5s ease-in-out 5s forwards;
-            max-width: 800px;
-            width: 90%;
-        }
-
-        @keyframes scaleIn {
-            to { transform: scale(1); }
-        }
-
-        h2 {
-            color: #1e3c72;
-            margin-bottom: 20px;
-            font-size: 28px;
-            font-weight: 600;
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 10px;
-            background: #f1f1f1;
-            font-size: 16px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-            resize: vertical;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 25px;
-            background: #f1f1f1;
-            font-size: 16px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        input[type="text"]:focus, textarea:focus {
             background: #e6e6e6;
-            outline: none;
+            margin: 0;
         }
-
-        button {
-            padding: 12px 40px;
-            background: linear-gradient(45deg, #00d4ff, #ff007a);
-            color: white;
-            border: none;
+        .calculator {
+            background: #ffffff;
             border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            margin: 10px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 400px;
         }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .preview {
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background: white;
-            max-height: 300px;
-            overflow: auto;
-        }
-
-        iframe {
+        #display {
             width: 100%;
-            height: 300px;
+            height: 80px;
+            font-size: 28px;
+            text-align: right;
+            padding: 15px;
             border: none;
-            border-radius: 10px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-        p {
-            color: #555;
-            font-size: 14px;
-            margin-bottom: 15px;
+        .keys {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        .key {
+            background: #e0e0e0;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            padding: 18px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .key:hover {
+            background: #d0d0d0;
+        }
+        .key:active {
+            transform: scale(0.95);
+        }
+        .key.operator {
+            background: #ff9500;
+            color: white;
+        }
+        .key.operator:hover {
+            background: #e68a00;
+        }
+        .key.function {
+            background: #a0a0a0;
+            color: white;
+        }
+        .key.function:hover {
+            background: #909090;
+        }
+        .key.equal {
+            background: #4CAF50;
+            color: white;
+            grid-column: span 2;
+        }
+        .key.equal:hover {
+            background: #45a049;
+        }
+        .key.clear {
+            background: #ff3b30;
+            color: white;
+        }
+        .key.clear:hover {
+            background: #e6352d;
         }
     </style>
 </head>
 <body>
-    <div class="loading-screen">
-        <div class="loader"></div>
-        <div class="particles" id="particles"></div>
-        <div class="loading-text">Đang tải...</div>
-    </div>
-
-    <div class="container">
-        <h2>Trình Duyệt Ẩn Danh & Chạy HTML</h2>
-        <p>Nhập mã HTML hoặc URL để xem trước hoặc truy cập ẩn danh</p>
-        
-        <textarea id="htmlInput" placeholder="Nhập mã HTML tại đây..."></textarea>
-        <input type="text" id="urlInput" placeholder="Nhập URL (ví dụ: https://example.com)">
-        <button onclick="executeAction()">Thực thi</button>
-        
-        <div class="preview">
-            <iframe id="previewFrame" sandbox="allow-same-origin"></iframe>
+    <div class="calculator">
+        <input type="text" id="display" placeholder="0" readonly>
+        <div class="keys">
+            <button class="key function" onclick="addToDisplay('sin(')">sin</button>
+            <button class="key function" onclick="addToDisplay('cos(')">cos</button>
+            <button class="key function" onclick="addToDisplay('tan(')">tan</button>
+            <button class="key function" onclick="addToDisplay('asin(')">asin</button>
+            <button class="key function" onclick="addToDisplay('acos(')">acos</button>
+            <button class="key function" onclick="addToDisplay('atan(')">atan</button>
+            <button class="key function" onclick="addToDisplay('log(')">log</button>
+            <button class="key function" onclick="addToDisplay('ln(')">ln</button>
+            <button class="key function" onclick="addToDisplay('exp(')">exp</button>
+            <button class="key function" onclick="addToDisplay('sqrt(')">√</button>
+            <button class="key function" onclick="addToDisplay('^')">^</button>
+            <button class="key function" onclick="addToDisplay('pi')">π</button>
+            <button class="key function" onclick="addToDisplay('e')">e</button>
+            <button class="key" onclick="addToDisplay('(')">(</button>
+            <button class="key" onclick="addToDisplay(')')">)</button>
+            <button class="key" onclick="addToDisplay('7')">7</button>
+            <button class="key" onclick="addToDisplay('8')">8</button>
+            <button class="key" onclick="addToDisplay('9')">9</button>
+            <button class="key operator" onclick="addToDisplay('/')">÷</button>
+            <button class="key clear" onclick="clearDisplay()">C</button>
+            <button class="key" onclick="addToDisplay('4')">4</button>
+            <button class="key" onclick="addToDisplay('5')">5</button>
+            <button class="key" onclick="addToDisplay('6')">6</button>
+            <button class="key operator" onclick="addToDisplay('*')">×</button>
+            <button class="key" onclick="backspace()">←</button>
+            <button class="key" onclick="addToDisplay('1')">1</button>
+            <button class="key" onclick="addToDisplay('2')">2</button>
+            <button class="key" onclick="addToDisplay('3')">3</button>
+            <button class="key operator" onclick="addToDisplay('-')">-</button>
+            <button class="key equal" onclick="calculate()">=</button>
+            <button class="key" onclick="addToDisplay('0')">0</button>
+            <button class="key" onclick="addToDisplay('.')">.</button>
+            <button class="key operator" onclick="addToDisplay('+')">+</button>
         </div>
     </div>
 
     <script>
-        // Tạo particle cho hiệu ứng loading
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.animationDelay = Math.random() * 2 + 's';
-            particlesContainer.appendChild(particle);
-        }
-
-        function executeAction() {
-            const htmlInput = document.getElementById('htmlInput').value.trim();
-            const urlInput = document.getElementById('urlInput').value.trim();
-
-            if (htmlInput) {
-                // Hiển thị mã HTML trong iframe
-                const previewFrame = document.getElementById('previewFrame');
-                const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-                doc.open();
-                doc.write(htmlInput || '<p>Nhập mã HTML để xem trước!</p>');
-                doc.close();
-            } else if (urlInput) {
-                // Mở URL trong cửa sổ ẩn danh
-                let url = urlInput;
-                if (!/^https?:\/\//i.test(url)) {
-                    url = 'https://' + url;
-                }
-                try {
-                    new URL(url);
-                    window.open(url, '_blank', 'noopener,noreferrer');
-                } catch (e) {
-                    alert('Vui lòng nhập URL hợp lệ!');
-                }
-            } else {
-                alert('Vui lòng nhập mã HTML hoặc URL!');
+        function addToDisplay(value) {
+            try {
+                const display = document.getElementById('display');
+                display.value += value;
+            } catch (error) {
+                console.error('Error in addToDisplay:', error);
+                document.getElementById('display').value = 'Lỗi';
             }
         }
 
-        // Xử lý sự kiện Enter trên ô input
-        document.getElementById('urlInput').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                executeAction();
+        function clearDisplay() {
+            try {
+                document.getElementById('display').value = '';
+            } catch (error) {
+                console.error('Error in clearDisplay:', error);
+                document.getElementById('display').value = 'Lỗi';
             }
-        });
+        }
 
-        // Xử lý sự kiện Ctrl + Enter trên textarea
-        document.getElementById('htmlInput').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter' && event.ctrlKey) {
-                executeAction();
+        function backspace() {
+            try {
+                const display = document.getElementById('display');
+                display.value = display.value.slice(0, -1);
+            } catch (error) {
+                console.error('Error in backspace:', error);
+                document.getElementById('display').value = 'Lỗi';
             }
-        });
+        }
+
+        function evaluateExpression(expression) {
+            try {
+                // Thay thế các hằng số
+                expression = expression.replace(/pi/g, Math.PI);
+                expression = expression.replace(/e/g, Math.E);
+
+                // Hàm toán học
+                const mathFunctions = {
+                    'sin': Math.sin,
+                    'cos': Math.cos,
+                    'tan': Math.tan,
+                    'asin': Math.asin,
+                    'acos': Math.acos,
+                    'atan': Math.atan,
+                    'sqrt': Math.sqrt,
+                    'log': Math.log10,
+                    'ln': Math.log,
+                    'exp': Math.exp
+                };
+
+                // Hàm xử lý biểu thức
+                function parseExpression(expr) {
+                    expr = expr.replace(/\s/g, ''); // Loại bỏ khoảng trắng
+                    for (const func in mathFunctions) {
+                        const regex = new RegExp(`${func}\\(([^)]+)\\)`, 'g');
+                        expr = expr.replace(regex, (match, arg) => {
+                            const value = parseExpression(arg);
+                            return mathFunctions[func](value);
+                        });
+                    }
+                    // Xử lý lũy thừa
+                    expr = expr.replace(/(\d*\.?\d*)\^(\d*\.?\d*)/g, (match, base, exp) => {
+                        return Math.pow(parseFloat(base), parseFloat(exp));
+                    });
+                    // Đánh giá biểu thức số học cơ bản
+                    return eval(expr);
+                }
+
+                const result = parseExpression(expression);
+                if (isNaN(result) || !isFinite(result)) {
+                    return 'Lỗi';
+                }
+                return result;
+            } catch (error) {
+                console.error('Error in evaluateExpression:', error);
+                return 'Lỗi';
+            }
+        }
+
+        function calculate() {
+            try {
+                const display = document.getElementById('display');
+                const expression = display.value.trim();
+                if (!expression) {
+                    display.value = '0';
+                    return;
+                }
+                const result = evaluateExpression(expression);
+                display.value = result;
+            } catch (error) {
+                console.error('Error in calculate:', error);
+                document.getElementById('display').value = 'Lỗi';
+            }
+        }
     </script>
 </body>
 </html>
