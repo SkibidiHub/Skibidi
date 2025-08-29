@@ -1,101 +1,108 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Email 10 Phút - Public Mail</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body {font-family: Arial, sans-serif; margin:0; background:#f5f5f5; color:#333;}
-  header {padding:10px; background:#4a90e2; color:white; text-align:center;}
-  .email-box {margin:20px auto; padding:15px; background:white; max-width:500px; 
-              border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-  .email-box button {margin-left:10px; padding:5px 10px; border:none; border-radius:6px; cursor:pointer;}
-  .inbox {margin:20px auto; max-width:600px;}
-  .mail-item {background:white; margin:10px 0; padding:10px; border-radius:8px; cursor:pointer;
-              box-shadow:0 1px 4px rgba(0,0,0,0.1);}
-  .mail-item:hover {background:#f0f8ff;}
-  #modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-          background:rgba(0,0,0,0.6); align-items:center; justify-content:center;}
-  #modal-content {background:white; padding:20px; border-radius:12px; max-width:600px; max-height:80%; overflow:auto;}
-  #close {float:right; cursor:pointer; font-size:20px; font-weight:bold;}
-</style>
+  <meta charset="UTF-8">
+  <title>Email 10 phút - Maildrop</title>
+  <style>
+    body{font-family:sans-serif;background:#f4f4f9;color:#333;margin:0;padding:0;display:flex;flex-direction:column;align-items:center}
+    header{background:#4a90e2;color:#fff;width:100%;padding:1rem;text-align:center;font-size:1.4rem}
+    .container{max-width:800px;width:100%;padding:1rem}
+    .email-box{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:.8rem 1rem;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+    button{background:#4a90e2;color:#fff;border:none;padding:.5rem 1rem;border-radius:5px;cursor:pointer;transition:.2s}
+    button:hover{background:#357ABD}
+    #mails{margin-top:1rem}
+    .mail-card{background:#fff;margin:.5rem 0;padding:1rem;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,.1);cursor:pointer}
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);justify-content:center;align-items:center}
+    .modal-content{background:#fff;padding:1rem;max-width:600px;width:90%;border-radius:8px;max-height:80%;overflow:auto}
+    .close{float:right;cursor:pointer;font-size:1.2rem}
+  </style>
 </head>
 <body>
-
-<header>
-  <h2>Email 10 Phút (Mailinator)</h2>
-  <p id="timer">600</p>
-</header>
-
-<div class="email-box">
-  <span>Email: <b id="email"></b></span>
-  <button onclick="copyEmail()">Copy</button>
-</div>
-
-<div class="inbox" id="inbox"></div>
-
-<div id="modal">
-  <div id="modal-content">
-    <span id="close">&times;</span>
-    <h3 id="m-subject"></h3>
-    <p><b>From:</b> <span id="m-from"></span></p>
-    <hr>
-    <div id="m-body"></div>
+  <header>📧 Email 10 phút (Maildrop)</header>
+  <div class="container">
+    <div class="email-box">
+      <span id="email">Đang tạo...</span>
+      <div>
+        <button onclick="copyEmail()">📋 Copy</button>
+        <button onclick="newEmail()">🔄 Tạo mới</button>
+      </div>
+    </div>
+    <p>⏳ Hết hạn sau: <span id="countdown">600</span>s</p>
+    <h3>Inbox</h3>
+    <div id="mails"></div>
   </div>
-</div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="mailContent"></div>
+    </div>
+  </div>
 
 <script>
-let inboxName = "demo" + Math.floor(Math.random()*10000);
-let email = inboxName + "@mailinator.com";
-document.getElementById("email").innerText = email;
+let emailUser="", countdown=600, timer, poller;
 
-function copyEmail() {
-  navigator.clipboard.writeText(email);
-  alert("Đã copy email: " + email);
+function randomName(len=6){
+  const chars="abcdefghijklmnopqrstuvwxyz123456789";
+  return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join("");
 }
 
-// countdown 10 phút
-let timeLeft = 600;
-setInterval(()=>{
-  if(timeLeft > 0){
-    timeLeft--; document.getElementById("timer").innerText = timeLeft+"s";
-  }
-},1000);
+function newEmail(){
+  clearInterval(timer); clearInterval(poller);
+  emailUser=randomName();
+  document.getElementById("email").textContent=emailUser+"@maildrop.cc";
+  countdown=600;
+  document.getElementById("countdown").textContent=countdown;
+  timer=setInterval(()=>{countdown--;document.getElementById("countdown").textContent=countdown;if(countdown<=0){clearInterval(timer);alert("Email hết hạn, tạo mới nhé!");}},1000);
+  poller=setInterval(loadInbox,10000);
+  loadInbox();
+}
 
-// load inbox
-async function loadInbox() {
-  try {
-    let res = await fetch(`https://api.mailinator.com/v2/domains/public/inboxes/${inboxName}`);
-    if(!res.ok) return;
-    let data = await res.json();
-    let inbox = document.getElementById("inbox");
-    inbox.innerHTML = "";
-    if(data.messages){
+function copyEmail(){
+  navigator.clipboard.writeText(document.getElementById("email").textContent);
+  alert("Đã copy email!");
+}
+
+async function loadInbox(){
+  if(!emailUser) return;
+  try{
+    let res=await fetch(`https://api.maildrop.cc/inbox/${emailUser}`);
+    let data=await res.json();
+    let box=document.getElementById("mails");
+    box.innerHTML="";
+    if(data.messages && data.messages.length){
       data.messages.forEach(m=>{
-        let div = document.createElement("div");
-        div.className="mail-item";
-        div.innerHTML = `<b>${m.subject || "(Không tiêu đề)"}</b><br><small>From: ${m.from}</small>`;
+        let div=document.createElement("div");
+        div.className="mail-card";
+        div.innerHTML=`<b>${m.from}</b><br>${m.subject||"(Không tiêu đề)"}<br><small>${m.date}</small>`;
         div.onclick=()=>openMail(m.id);
-        inbox.appendChild(div);
+        box.prepend(div);
       });
+    }else{
+      box.innerHTML="<i>Chưa có email</i>";
     }
-  } catch(e){ console.log(e); }
+  }catch(e){console.error(e);}
 }
 
-// open mail
 async function openMail(id){
-  let res = await fetch(`https://api.mailinator.com/v2/domains/public/inboxes/${inboxName}/messages/${id}`);
-  let data = await res.json();
-  document.getElementById("m-subject").innerText = data.subject;
-  document.getElementById("m-from").innerText = data.from;
-  document.getElementById("m-body").innerHTML = data.parts?.[0]?.body || "(Không có nội dung)";
-  document.getElementById("modal").style.display="flex";
+  try{
+    let res=await fetch(`https://api.maildrop.cc/message/${id}`);
+    let data=await res.json();
+    let content=document.getElementById("mailContent");
+    content.innerHTML=`<h3>${data.subject}</h3><p><b>Từ:</b> ${data.from}</p><hr><div>${sanitize(data.body)}</div>`;
+    document.getElementById("modal").style.display="flex";
+  }catch(e){console.error(e);}
 }
-document.getElementById("close").onclick=()=>{document.getElementById("modal").style.display="none";}
 
-// poll inbox mỗi 10s
-setInterval(loadInbox,10000);
-loadInbox();
+function sanitize(html){
+  let div=document.createElement("div");
+  div.textContent=html;
+  return div.innerHTML.replace(/\n/g,"<br>");
+}
+
+function closeModal(){document.getElementById("modal").style.display="none";}
+
+newEmail();
 </script>
 </body>
 </html>
