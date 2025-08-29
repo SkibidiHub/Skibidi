@@ -42,7 +42,7 @@
 </head>
 <body>
     <script>
-        const numTexts = 100; // Số lượng chữ
+        const numTexts = 200; // Số lượng chữ
         const body = document.body;
         const maxWidth = window.innerWidth;
         const maxHeight = window.innerHeight;
@@ -50,7 +50,7 @@
         function createText() {
             const text = document.createElement('div');
             text.className = 'text';
-            text.textContent = 'Ngọc Ngu';
+            text.textContent = 'web đã bị hack';
             text.style.left = `${Math.random() * maxWidth}px`;
             text.style.top = `${Math.random() * maxHeight}px`;
             text.style.setProperty('--tx', `${(Math.random() - 0.5) * maxWidth}px`);
@@ -73,7 +73,8 @@
         }
 
         // Thêm chữ mới định kỳ
-        setInterval(createText, 2000);
+        setInterval(createText, 999999999999999);
     </script>
 </body>
 </html>
+
