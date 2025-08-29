@@ -1,224 +1,201 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Máy Tính Khoa Học</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: #e6e6e6;
-            margin: 0;
-        }
-        .calculator {
-            background: #ffffff;
-            border-radius: 25px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            width: 400px;
-        }
-        #display {
-            width: 100%;
-            height: 80px;
-            font-size: 28px;
-            text-align: right;
-            padding: 15px;
-            border: none;
-            background: #f0f0f0;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-sizing: border-box;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .keys {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-        }
-        .key {
-            background: #e0e0e0;
-            border: none;
-            border-radius: 12px;
-            font-size: 20px;
-            padding: 18px;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-        .key:hover {
-            background: #d0d0d0;
-        }
-        .key:active {
-            transform: scale(0.95);
-        }
-        .key.operator {
-            background: #ff9500;
-            color: white;
-        }
-        .key.operator:hover {
-            background: #e68a00;
-        }
-        .key.function {
-            background: #a0a0a0;
-            color: white;
-        }
-        .key.function:hover {
-            background: #909090;
-        }
-        .key.equal {
-            background: #4CAF50;
-            color: white;
-            grid-column: span 2;
-        }
-        .key.equal:hover {
-            background: #45a049;
-        }
-        .key.clear {
-            background: #ff3b30;
-            color: white;
-        }
-        .key.clear:hover {
-            background: #e6352d;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email 10 Phút - API Free</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="calculator">
-        <input type="text" id="display" placeholder="0" readonly>
-        <div class="keys">
-            <button class="key function" onclick="addToDisplay('sin(')">sin</button>
-            <button class="key function" onclick="addToDisplay('cos(')">cos</button>
-            <button class="key function" onclick="addToDisplay('tan(')">tan</button>
-            <button class="key function" onclick="addToDisplay('asin(')">asin</button>
-            <button class="key function" onclick="addToDisplay('acos(')">acos</button>
-            <button class="key function" onclick="addToDisplay('atan(')">atan</button>
-            <button class="key function" onclick="addToDisplay('log(')">log</button>
-            <button class="key function" onclick="addToDisplay('ln(')">ln</button>
-            <button class="key function" onclick="addToDisplay('exp(')">exp</button>
-            <button class="key function" onclick="addToDisplay('sqrt(')">√</button>
-            <button class="key function" onclick="addToDisplay('^')">^</button>
-            <button class="key function" onclick="addToDisplay('pi')">π</button>
-            <button class="key function" onclick="addToDisplay('e')">e</button>
-            <button class="key" onclick="addToDisplay('(')">(</button>
-            <button class="key" onclick="addToDisplay(')')">)</button>
-            <button class="key" onclick="addToDisplay('7')">7</button>
-            <button class="key" onclick="addToDisplay('8')">8</button>
-            <button class="key" onclick="addToDisplay('9')">9</button>
-            <button class="key operator" onclick="addToDisplay('/')">÷</button>
-            <button class="key clear" onclick="clearDisplay()">C</button>
-            <button class="key" onclick="addToDisplay('4')">4</button>
-            <button class="key" onclick="addToDisplay('5')">5</button>
-            <button class="key" onclick="addToDisplay('6')">6</button>
-            <button class="key operator" onclick="addToDisplay('*')">×</button>
-            <button class="key" onclick="backspace()">←</button>
-            <button class="key" onclick="addToDisplay('1')">1</button>
-            <button class="key" onclick="addToDisplay('2')">2</button>
-            <button class="key" onclick="addToDisplay('3')">3</button>
-            <button class="key operator" onclick="addToDisplay('-')">-</button>
-            <button class="key equal" onclick="calculate()">=</button>
-            <button class="key" onclick="addToDisplay('0')">0</button>
-            <button class="key" onclick="addToDisplay('.')">.</button>
-            <button class="key operator" onclick="addToDisplay('+')">+</button>
-        </div>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center mb-4">Email 10 Phút</h1>
+    <p class="text-gray-600 text-center mb-4">Sử dụng API Mail.tm miễn phí, không cần host</p>
+    
+    <div class="flex items-center justify-between bg-gray-100 p-3 rounded">
+      <input id="email" type="text" value="Đang tải..." readonly class="bg-transparent w-full outline-none text-gray-800">
+      <button onclick="copyEmail()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Sao chép</button>
     </div>
+    
+    <div class="mt-4">
+      <p class="text-sm text-gray-500 text-center">Hết hạn sau: <span id="timer">10:00</span></p>
+      <p id="status" class="text-sm text-red-500 text-center hidden">Đã hết hạn! Tạo mới để tiếp tục.</p>
+    </div>
+    
+    <div class="mt-6">
+      <h2 class="text-lg font-semibold">Hòm thư đến</h2>
+      <div id="inbox" class="mt-2 h-40 bg-gray-100 p-3 rounded overflow-y-auto">
+        <p id="no-email" class="text-gray-500">Chưa có email nào. Gửi test đến địa chỉ trên để xem.</p>
+      </div>
+    </div>
+    
+    <button onclick="generateNewEmail()" class="mt-4 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">Tạo email mới (Xóa cũ)</button>
+  </div>
 
-    <script>
-        function addToDisplay(value) {
-            try {
-                const display = document.getElementById('display');
-                display.value += value;
-            } catch (error) {
-                console.error('Error in addToDisplay:', error);
-                document.getElementById('display').value = 'Lỗi';
-            }
+  <script>
+    let timeLeft = 600; // 10 phút
+    let timerInterval;
+    let currentAccount = null; // Lưu thông tin tài khoản Mail.tm
+    let pollInterval; // Để poll email định kỳ
+
+    // Sao chép email
+    function copyEmail() {
+      try {
+        const emailInput = document.getElementById('email');
+        emailInput.select();
+        document.execCommand('copy');
+        alert('Đã sao chép email!');
+      } catch (error) {
+        console.error('Lỗi sao chép:', error);
+        alert('Lỗi sao chép!');
+      }
+    }
+
+    // Tạo email mới qua Mail.tm API
+    async function generateNewEmail() {
+      try {
+        // Dừng poll cũ
+        if (pollInterval) clearInterval(pollInterval);
+
+        // Lấy domain ngẫu nhiên từ Mail.tm
+        const domainsResponse = await fetch('https://api.mail.tm/domains');
+        const domainsData = await domainsResponse.json();
+        const randomDomain = domainsData['hydra:member'][Math.floor(Math.random() * domainsData['hydra:member'].length)].domain;
+
+        // Tạo username ngẫu nhiên
+        const username = 'temp' + Math.random().toString(36).substring(2, 8);
+        const password = 'pass' + Math.random().toString(36).substring(2, 8); // Mật khẩu tạm
+
+        // Tạo tài khoản
+        const createResponse = await fetch('https://api.mail.tm/accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: username + '@' + randomDomain, password: password })
+        });
+        const accountData = await createResponse.json();
+
+        if (accountData.id) {
+          currentAccount = accountData; // Lưu id và address
+          document.getElementById('email').value = accountData.address;
+
+          // Xóa lịch sử (làm trống hòm thư)
+          clearEmailHistory();
+
+          // Reset timer
+          resetTimer();
+
+          // Bắt đầu poll email
+          fetchEmails();
+          pollInterval = setInterval(fetchEmails, 3000); // Kiểm tra mỗi 3 giây
+
+          document.getElementById('status').classList.add('hidden');
+          alert('Email mới đã tạo! Gửi email test đến: ' + accountData.address);
+        } else {
+          throw new Error('Lỗi tạo email');
         }
+      } catch (error) {
+        console.error('Lỗi tạo email:', error);
+        alert('Lỗi kết nối API Mail.tm! Kiểm tra mạng.');
+      }
+    }
 
-        function clearDisplay() {
-            try {
-                document.getElementById('display').value = '';
-            } catch (error) {
-                console.error('Error in clearDisplay:', error);
-                document.getElementById('display').value = 'Lỗi';
-            }
+    // Xóa lịch sử email (làm trống giao diện)
+    function clearEmailHistory() {
+      const inbox = document.getElementById('inbox');
+      inbox.innerHTML = '<p id="no-email" class="text-gray-500">Chưa có email nào. Gửi test đến địa chỉ trên để xem.</p>';
+    }
+
+    // Cập nhật timer
+    function updateTimer() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById('timer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      
+      if (timeLeft <= 0) {
+        // Hết hạn: Xóa tài khoản qua API để xóa khỏi hệ thống
+        deleteAccount();
+        document.getElementById('email').value = 'Hết hạn';
+        document.getElementById('status').classList.remove('hidden');
+        clearEmailHistory();
+        if (pollInterval) clearInterval(pollInterval);
+        clearInterval(timerInterval);
+      } else {
+        timeLeft--;
+      }
+    }
+
+    // Reset timer
+    function resetTimer() {
+      timeLeft = 600;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 1000);
+      updateTimer();
+    }
+
+    // Xóa tài khoản khỏi Mail.tm (xóa email cũ khỏi hệ thống)
+    async function deleteAccount() {
+      if (currentAccount && currentAccount.id) {
+        try {
+          // Đăng nhập để lấy token (Mail.tm yêu cầu token cho delete)
+          const loginResponse = await fetch('https://api.mail.tm/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: currentAccount.address, password: currentAccount.password }) // Sử dụng password tạm từ lúc tạo
+          });
+          const loginData = await loginResponse.json();
+          const token = loginData.token;
+
+          // Xóa tài khoản
+          await fetch(`https://api.mail.tm/accounts/${currentAccount.id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          console.log('Đã xóa email cũ khỏi hệ thống Mail.tm');
+        } catch (error) {
+          console.error('Lỗi xóa tài khoản:', error);
         }
+      }
+    }
 
-        function backspace() {
-            try {
-                const display = document.getElementById('display');
-                display.value = display.value.slice(0, -1);
-            } catch (error) {
-                console.error('Error in backspace:', error);
-                document.getElementById('display').value = 'Lỗi';
-            }
+    // Lấy email từ Mail.tm
+    async function fetchEmails() {
+      if (!currentAccount || !currentAccount.id) return;
+
+      try {
+        // Đăng nhập để lấy token (mỗi lần poll cần token)
+        const loginResponse = await fetch('https://api.mail.tm/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: currentAccount.address, password: currentAccount.password })
+        });
+        const loginData = await loginResponse.json();
+        const token = loginData.token;
+
+        // Lấy messages
+        const messagesResponse = await fetch(`https://api.mail.tm/messages?accountId=${currentAccount.id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const messagesData = await messagesResponse.json();
+
+        const inbox = document.getElementById('inbox');
+        if (messagesData['hydra:member'].length === 0) {
+          inbox.innerHTML = '<p id="no-email" class="text-gray-500">Chưa có email nào. Gửi test đến địa chỉ trên để xem.</p>';
+        } else {
+          inbox.innerHTML = messagesData['hydra:member'].map(msg => `
+            <div class="border-b py-2 last:border-b-0">
+              <p><strong>Từ:</strong> ${msg.from?.address || 'Không rõ'}</p>
+              <p><strong>Chủ đề:</strong> ${msg.subject || 'Không có'}</p>
+              <p><strong>Thời gian:</strong> ${new Date(msg.createdAt).toLocaleString()}</p>
+              <p class="text-sm">${msg.text || msg.html || 'Nội dung trống'}</p>
+            </div>
+          `).join('');
         }
+      } catch (error) {
+        console.error('Lỗi lấy email:', error);
+      }
+    }
 
-        function evaluateExpression(expression) {
-            try {
-                // Thay thế các hằng số
-                expression = expression.replace(/pi/g, Math.PI);
-                expression = expression.replace(/e/g, Math.E);
-
-                // Hàm toán học
-                const mathFunctions = {
-                    'sin': Math.sin,
-                    'cos': Math.cos,
-                    'tan': Math.tan,
-                    'asin': Math.asin,
-                    'acos': Math.acos,
-                    'atan': Math.atan,
-                    'sqrt': Math.sqrt,
-                    'log': Math.log10,
-                    'ln': Math.log,
-                    'exp': Math.exp
-                };
-
-                // Hàm xử lý biểu thức
-                function parseExpression(expr) {
-                    expr = expr.replace(/\s/g, ''); // Loại bỏ khoảng trắng
-                    for (const func in mathFunctions) {
-                        const regex = new RegExp(`${func}\\(([^)]+)\\)`, 'g');
-                        expr = expr.replace(regex, (match, arg) => {
-                            const value = parseExpression(arg);
-                            return mathFunctions[func](value);
-                        });
-                    }
-                    // Xử lý lũy thừa
-                    expr = expr.replace(/(\d*\.?\d*)\^(\d*\.?\d*)/g, (match, base, exp) => {
-                        return Math.pow(parseFloat(base), parseFloat(exp));
-                    });
-                    // Đánh giá biểu thức số học cơ bản
-                    return eval(expr);
-                }
-
-                const result = parseExpression(expression);
-                if (isNaN(result) || !isFinite(result)) {
-                    return 'Lỗi';
-                }
-                return result;
-            } catch (error) {
-                console.error('Error in evaluateExpression:', error);
-                return 'Lỗi';
-            }
-        }
-
-        function calculate() {
-            try {
-                const display = document.getElementById('display');
-                const expression = display.value.trim();
-                if (!expression) {
-                    display.value = '0';
-                    return;
-                }
-                const result = evaluateExpression(expression);
-                display.value = result;
-            } catch (error) {
-                console.error('Error in calculate:', error);
-                document.getElementById('display').value = 'Lỗi';
-            }
-        }
-    </script>
+    // Khởi tạo: Tạo email đầu tiên
+    generateNewEmail();
+  </script>
 </body>
 </html>
