@@ -53,7 +53,14 @@ function newEmail(){
   document.getElementById("email").textContent=emailUser+"@maildrop.cc";
   countdown=600;
   document.getElementById("countdown").textContent=countdown;
-  timer=setInterval(()=>{countdown--;document.getElementById("countdown").textContent=countdown;if(countdown<=0){clearInterval(timer);alert("Email hết hạn, tạo mới nhé!");}},1000);
+  timer=setInterval(()=>{
+    countdown--;
+    document.getElementById("countdown").textContent=countdown;
+    if(countdown<=0){
+      clearInterval(timer);
+      alert("Email hết hạn, tạo mới nhé!");
+    }
+  },1000);
   poller=setInterval(loadInbox,10000);
   loadInbox();
 }
@@ -66,12 +73,12 @@ function copyEmail(){
 async function loadInbox(){
   if(!emailUser) return;
   try{
-    let res=await fetch(`https://api.maildrop.cc/inbox/${emailUser}`);
+    let res=await fetch(`https://maildrop.cc/api/inbox/${emailUser}`);
     let data=await res.json();
     let box=document.getElementById("mails");
     box.innerHTML="";
-    if(data.messages && data.messages.length){
-      data.messages.forEach(m=>{
+    if(data && data.emails && data.emails.length){
+      data.emails.forEach(m=>{
         let div=document.createElement("div");
         div.className="mail-card";
         div.innerHTML=`<b>${m.from}</b><br>${m.subject||"(Không tiêu đề)"}<br><small>${m.date}</small>`;
@@ -81,17 +88,17 @@ async function loadInbox(){
     }else{
       box.innerHTML="<i>Chưa có email</i>";
     }
-  }catch(e){console.error(e);}
+  }catch(e){console.error("Lỗi load inbox:",e);}
 }
 
 async function openMail(id){
   try{
-    let res=await fetch(`https://api.maildrop.cc/message/${id}`);
+    let res=await fetch(`https://maildrop.cc/api/message/${emailUser}/${id}`);
     let data=await res.json();
     let content=document.getElementById("mailContent");
     content.innerHTML=`<h3>${data.subject}</h3><p><b>Từ:</b> ${data.from}</p><hr><div>${sanitize(data.body)}</div>`;
     document.getElementById("modal").style.display="flex";
-  }catch(e){console.error(e);}
+  }catch(e){console.error("Lỗi mở mail:",e);}
 }
 
 function sanitize(html){
