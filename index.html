@@ -1,115 +1,79 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Email 10 phút - Maildrop</title>
-  <style>
-    body{font-family:sans-serif;background:#f4f4f9;color:#333;margin:0;padding:0;display:flex;flex-direction:column;align-items:center}
-    header{background:#4a90e2;color:#fff;width:100%;padding:1rem;text-align:center;font-size:1.4rem}
-    .container{max-width:800px;width:100%;padding:1rem}
-    .email-box{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:.8rem 1rem;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,.1)}
-    button{background:#4a90e2;color:#fff;border:none;padding:.5rem 1rem;border-radius:5px;cursor:pointer;transition:.2s}
-    button:hover{background:#357ABD}
-    #mails{margin-top:1rem}
-    .mail-card{background:#fff;margin:.5rem 0;padding:1rem;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,.1);cursor:pointer}
-    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);justify-content:center;align-items:center}
-    .modal-content{background:#fff;padding:1rem;max-width:600px;width:90%;border-radius:8px;max-height:80%;overflow:auto}
-    .close{float:right;cursor:pointer;font-size:1.2rem}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siêu nhiều chữ động</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+        }
+
+        .text {
+            position: absolute;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            pointer-events: none;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+            }
+            to {
+                text-shadow: 0 0 10px #ff00ff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
+            }
+        }
+
+        @keyframes move {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>📧 Email 10 phút (Maildrop)</header>
-  <div class="container">
-    <div class="email-box">
-      <span id="email">Đang tạo...</span>
-      <div>
-        <button onclick="copyEmail()">📋 Copy</button>
-        <button onclick="newEmail()">🔄 Tạo mới</button>
-      </div>
-    </div>
-    <p>⏳ Hết hạn sau: <span id="countdown">600</span>s</p>
-    <h3>Inbox</h3>
-    <div id="mails"></div>
-  </div>
+    <script>
+        const numTexts = 100; // Số lượng chữ
+        const body = document.body;
+        const maxWidth = window.innerWidth;
+        const maxHeight = window.innerHeight;
 
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <div id="mailContent"></div>
-    </div>
-  </div>
+        function createText() {
+            const text = document.createElement('div');
+            text.className = 'text';
+            text.textContent = 'Ngọc Ngu';
+            text.style.left = `${Math.random() * maxWidth}px`;
+            text.style.top = `${Math.random() * maxHeight}px`;
+            text.style.setProperty('--tx', `${(Math.random() - 0.5) * maxWidth}px`);
+            text.style.setProperty('--ty', `${(Math.random() - 0.5) * maxHeight}px`);
+            text.style.animation = `move ${Math.random() * 5 + 5}s linear infinite, glow 1.5s ease-in-out infinite alternate`;
+            body.appendChild(text);
 
-<script>
-let emailUser="", countdown=600, timer, poller;
+            // Xóa phần tử sau khi animation kết thúc để tránh tràn bộ nhớ
+            text.addEventListener('animationiteration', () => {
+                text.style.left = `${Math.random() * maxWidth}px`;
+                text.style.top = `${Math.random() * maxHeight}px`;
+                text.style.setProperty('--tx', `${(Math.random() - 0.5) * maxWidth}px`);
+                text.style.setProperty('--ty', `${(Math.random() - 0.5) * maxHeight}px`);
+            });
+        }
 
-function randomName(len=6){
-  const chars="abcdefghijklmnopqrstuvwxyz123456789";
-  return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join("");
-}
+        // Tạo nhiều chữ
+        for (let i = 0; i < numTexts; i++) {
+            createText();
+        }
 
-function newEmail(){
-  clearInterval(timer); clearInterval(poller);
-  emailUser=randomName();
-  document.getElementById("email").textContent=emailUser+"@maildrop.cc";
-  countdown=600;
-  document.getElementById("countdown").textContent=countdown;
-  timer=setInterval(()=>{
-    countdown--;
-    document.getElementById("countdown").textContent=countdown;
-    if(countdown<=0){
-      clearInterval(timer);
-      alert("Email hết hạn, tạo mới nhé!");
-    }
-  },1000);
-  poller=setInterval(loadInbox,10000);
-  loadInbox();
-}
-
-function copyEmail(){
-  navigator.clipboard.writeText(document.getElementById("email").textContent);
-  alert("Đã copy email!");
-}
-
-async function loadInbox(){
-  if(!emailUser) return;
-  try{
-    let res=await fetch(`https://maildrop.cc/api/inbox/${emailUser}`);
-    let data=await res.json();
-    let box=document.getElementById("mails");
-    box.innerHTML="";
-    if(data && data.emails && data.emails.length){
-      data.emails.forEach(m=>{
-        let div=document.createElement("div");
-        div.className="mail-card";
-        div.innerHTML=`<b>${m.from}</b><br>${m.subject||"(Không tiêu đề)"}<br><small>${m.date}</small>`;
-        div.onclick=()=>openMail(m.id);
-        box.prepend(div);
-      });
-    }else{
-      box.innerHTML="<i>Chưa có email</i>";
-    }
-  }catch(e){console.error("Lỗi load inbox:",e);}
-}
-
-async function openMail(id){
-  try{
-    let res=await fetch(`https://maildrop.cc/api/message/${emailUser}/${id}`);
-    let data=await res.json();
-    let content=document.getElementById("mailContent");
-    content.innerHTML=`<h3>${data.subject}</h3><p><b>Từ:</b> ${data.from}</p><hr><div>${sanitize(data.body)}</div>`;
-    document.getElementById("modal").style.display="flex";
-  }catch(e){console.error("Lỗi mở mail:",e);}
-}
-
-function sanitize(html){
-  let div=document.createElement("div");
-  div.textContent=html;
-  return div.innerHTML.replace(/\n/g,"<br>");
-}
-
-function closeModal(){document.getElementById("modal").style.display="none";}
-
-newEmail();
-</script>
+        // Thêm chữ mới định kỳ
+        setInterval(createText, 2000);
+    </script>
 </body>
 </html>
